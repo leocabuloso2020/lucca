@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Dancing_Script, Poppins } from "next/font/google"
 import "./globals.css"
+import { Toaster } from "@/components/ui/sonner" // Import Sonner Toaster
 
 const dancingScript = Dancing_Script({
   subsets: ["latin"],
@@ -29,7 +30,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={`${dancingScript.variable} ${poppins.variable} antialiased`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Toaster /> {/* Add the Toaster component here */}
+      </body>
     </html>
   )
 }

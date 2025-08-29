@@ -1,30 +1,24 @@
 "use client"
 
 import { useState } from "react"
-import { supabase } from "@/lib/supabase/client" // Caminho do import atualizado
+import { supabase, type Message as MessageType } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Label } from "@/components/ui/label" // Importação adicionada
 import { Trash2, Eye, EyeOff, Settings, MessageSquare, MapPin } from "lucide-react"
-
-interface Message {
-  id: number
-  name: string
-  message: string
-  created_at: string
-  approved: boolean
-}
+import { toast } from "sonner" // Import Sonner for notifications
 
 interface EventSetting {
   setting_key: string
   setting_value: string
-  updated_at: string // Adicionado para corresponder ao uso
+  updated_at: string
 }
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [password, setPassword] = useState("")
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messages, setMessages] = useState<MessageType[]>([])
   const [settings, setSettings] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
   const [activeTab, setActiveTab] = useState<"messages" | "settings">("messages")
@@ -34,8 +28,9 @@ export default function AdminPage() {
     if (password === "lucca2024") {
       setIsAuthenticated(true)
       loadData()
+      toast.success("Login realizado com sucesso!")
     } else {
-      alert("Senha incorreta!")
+      toast.error("Senha incorreta!")
     }
   }
 
@@ -44,16 +39,24 @@ export default function AdminPage() {
     setLoading(true)
 
     // Carregar mensagens
-    const { data: messagesData } = await supabase.from("messages").select("*").order("created_at", { ascending: false })
+    const { data: messagesData, error: messagesError } = await supabase.from("messages").select("*").order("created_at", { ascending: false })
 
-    if (messagesData) setMessages(messagesData)
+    if (messagesError) {
+      console.error("Error fetching messages:", messagesError)
+      toast.error("Erro ao carregar mensagens.")
+    } else {
+      setMessages(messagesData || [])
+    }
 
     // Carregar configurações
-    const { data: settingsData } = await supabase.from("event_settings").select("*")
+    const { data: settingsData, error: settingsError } = await supabase.from("event_settings").select("*")
 
-    if (settingsData) {
+    if (settingsError) {
+      console.error("Error fetching settings:", settingsError)
+      toast.error("Erro ao carregar configurações.")
+    } else if (settingsData) {
       const settingsObj = settingsData.reduce(
-        (acc: Record<string, string>, item: EventSetting) => { // Tipagem corrigida
+        (acc: Record<string, string>, item: EventSetting) => {
           acc[item.setting_key] = item.setting_value
           return acc
         },
@@ -72,6 +75,10 @@ export default function AdminPage() {
 
       if (!error) {
         setMessages(messages.filter((m) => m.id !== id))
+        toast.success("Mensagem removida com sucesso!")
+      } else {
+        console.error("Error deleting message:", error)
+        toast.error("Erro ao remover mensagem.")
       }
     }
   }
@@ -82,6 +89,10 @@ export default function AdminPage() {
 
     if (!error) {
       setMessages(messages.map((m) => (m.id === id ? { ...m, approved: !approved } : m)))
+      toast.success(`Mensagem ${!approved ? "aprovada" : "desaprovada"}!`)
+    } else {
+      console.error("Error toggling message approval:", error)
+      toast.error("Erro ao atualizar aprovação da mensagem.")
     }
   }
 
@@ -89,12 +100,17 @@ export default function AdminPage() {
   const updateSetting = async (key: string, value: string) => {
     const { error } = await supabase
       .from("event_settings")
-      .update({ setting_value: value, updated_at: new Date().toISOString() })
-      .eq("setting_key", key)
+      .upsert(
+        { setting_key: key, setting_value: value, updated_at: new Date().toISOString() },
+        { onConflict: "setting_key" }
+      )
 
     if (!error) {
       setSettings({ ...settings, [key]: value })
-      alert("Configuração atualizada com sucesso!")
+      toast.success("Configuração atualizada com sucesso!")
+    } else {
+      console.error("Error updating setting:", error)
+      toast.error("Erro ao atualizar configuração.")
     }
   }
 
@@ -172,7 +188,7 @@ export default function AdminPage() {
                     >
                       <div className="flex justify-between items-start mb-2">
                         <div>
-                          <h4 className="font-semibold">{message.name}</h4>
+                          <h4 className="font-semibold">{message.author_name}</h4>
                           <p className="text-sm text-gray-500">
                             {new Date(message.created_at).toLocaleString("pt-BR")}
                           </p>
@@ -214,7 +230,7 @@ export default function AdminPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Endereço do Evento</label>
+                  <Label className="block text-sm font-medium mb-2">Endereço do Evento</Label>
                   <div className="flex gap-2">
                     <Input
                       value={settings.event_address || ""}
@@ -226,7 +242,7 @@ export default function AdminPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Data do Evento</label>
+                  <Label className="block text-sm font-medium mb-2">Data do Evento</Label>
                   <div className="flex gap-2">
                     <Input
                       type="date"
@@ -238,7 +254,7 @@ export default function AdminPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Horário do Evento</label>
+                  <Label className="block text-sm font-medium mb-2">Horário do Evento</Label>
                   <div className="flex gap-2">
                     <Input
                       type="time"
@@ -250,7 +266,7 @@ export default function AdminPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Título do Evento</label>
+                  <Label className="block text-sm font-medium mb-2">Título do Evento</Label>
                   <div className="flex gap-2">
                     <Input
                       value={settings.event_title || ""}
@@ -269,7 +285,7 @@ export default function AdminPage() {
               </CardHeader>
               <CardContent>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Senha do Admin</label>
+                  <Label className="block text-sm font-medium mb-2">Senha do Admin</Label>
                   <div className="flex gap-2">
                     <Input
                       type="password"
