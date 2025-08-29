@@ -99,8 +99,8 @@ export function MusicPlayer() {
         {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
       </Button>
       <audio ref={audioRef} loop preload="metadata" onEnded={() => setIsPlaying(false)}>
-        <source src="/lucca-baby-music.mp3" type="audio/mpeg" />
-        <source src="/lucca-baby-music.wav" type="audio/wav" />
+        <source src="/minha-nova-musica.mp3" type="audio/mpeg" />
+        <source src="/minha-nova-musica.wav" type="audio/wav" />
         {/* Fallback sources if custom music is not available */}
         <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav" />
         <source src="https://actions.google.com/sounds/v1/ambiences/lullaby.ogg" type="audio/ogg" />
