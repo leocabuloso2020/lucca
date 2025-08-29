@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Heart, Gift, MapPin, Calendar, Clock, Loader2 } from "lucide-react"
-import { supabase, type Gift as GiftType } from "@/lib/supabase/client" // Caminho do import atualizado
+import { supabase, type Gift as GiftType } from "@/lib/supabase/client"
 import { GiftCard } from "@/components/gift-card"
 import { FloatingElements } from "@/components/floating-elements"
 import { MusicPlayer } from "@/components/music-player"
@@ -14,7 +14,7 @@ import { MessagesWall } from "@/components/messages-wall"
 export default function BabyShowerPage() {
   const [gifts, setGifts] = useState<GiftType[]>([])
   const [loading, setLoading] = useState(true)
-  const [currentSection, setCurrentSection] = useState("opening")
+  const [currentSection, setCurrentSection] = useState("opening") // Mantido para o estado da seção, caso seja usado em outro lugar
 
   useEffect(() => {
     // Adicionado para depuração: verificar a variável de ambiente
@@ -24,26 +24,7 @@ export default function BabyShowerPage() {
     fetchGifts()
   }, [])
 
-  useEffect(() => {
-    const sections = ["opening", "invitation", "gifts", "rsvp", "messages", "location", "closing"]
-    let currentIndex = 0
-
-    const interval = setInterval(() => {
-      if (currentIndex < sections.length - 1) {
-        currentIndex++
-        setCurrentSection(sections[currentIndex])
-        const element = document.getElementById(sections[currentIndex])
-        if (element) {
-          element.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          })
-        }
-      }
-    }, 12000) // Increased to 12 seconds for better UX
-
-    return () => clearInterval(interval)
-  }, [])
+  // O useEffect para rolagem automática foi removido aqui.
 
   const fetchGifts = async () => {
     try {
@@ -92,19 +73,7 @@ export default function BabyShowerPage() {
       <FloatingElements />
       <MusicPlayer />
 
-      {/* Navigation dots */}
-      <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 space-y-2">
-        {["opening", "invitation", "gifts", "rsvp", "messages", "location", "closing"].map((section) => (
-          <button
-            key={section}
-            onClick={() => scrollToSection(section)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              currentSection === section ? "bg-[#3CB371] scale-125" : "bg-[#3CB371]/40 hover:bg-[#3CB371]/60"
-            }`}
-            title={section}
-          />
-        ))}
-      </div>
+      {/* Os pontinhos de navegação foram removidos daqui. */}
 
       <section id="opening" className="min-h-screen flex items-center justify-center px-4 py-20 relative z-10">
         <div className="text-center max-w-4xl mx-auto animate-fade-in-up">
