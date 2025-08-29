@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Volume2, VolumeX, Play, Pause } from "lucide-react"
+import { toast } from "sonner" // Import Sonner for notifications
 
 export function MusicPlayer() {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -26,7 +27,8 @@ export function MusicPlayer() {
         setIsLoading(false)
         setHasError(true)
         setIsPlaying(false)
-        console.log("[v0] Audio failed to load")
+        toast.error("Erro ao carregar a música. Verifique o arquivo de áudio.")
+        console.error("[MusicPlayer] Audio failed to load or play.")
       }
 
       const handleLoadStart = () => {
@@ -51,19 +53,24 @@ export function MusicPlayer() {
         if (isPlaying) {
           audioRef.current.pause()
           setIsPlaying(false)
+          toast.info("Música pausada.")
         } else {
           setIsLoading(true)
           await audioRef.current.play()
           setIsPlaying(true)
           setIsLoading(false)
-          console.log("[v0] Music started playing")
+          toast.success("Música tocando!")
+          console.log("[MusicPlayer] Music started playing")
         }
       } catch (error) {
-        console.log("[v0] Autoplay prevented or audio error:", error)
+        console.error("[MusicPlayer] Autoplay prevented or audio error:", error)
         setIsLoading(false)
         setHasError(true)
         setIsPlaying(false)
+        toast.error("Não foi possível iniciar a música automaticamente. Tente novamente.")
       }
+    } else if (hasError) {
+      toast.error("A música não está disponível para tocar.")
     }
   }
 
@@ -71,6 +78,7 @@ export function MusicPlayer() {
     if (audioRef.current) {
       audioRef.current.muted = !isMuted
       setIsMuted(!isMuted)
+      toast.info(`Música ${!isMuted ? "silenciada" : "ativada"}.`)
     }
   }
 
