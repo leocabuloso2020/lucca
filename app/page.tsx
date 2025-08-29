@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Heart, Gift, MapPin, Calendar, Clock, Loader2 } from "lucide-react"
-import { supabase, type Gift as GiftType } from "@/lib/supabase/client"
+import { supabase, type Gift as GiftType } from "@/lib/supabase/client" // Caminho do import atualizado
 import { GiftCard } from "@/components/gift-card"
 import { FloatingElements } from "@/components/floating-elements"
 import { MusicPlayer } from "@/components/music-player"

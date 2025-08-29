@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Heart, MessageCircle, Send, Loader2, Clock } from "lucide-react"
 import { supabase, type Message } from "@/lib/supabase/client"
+import { RealtimePostgresChangesPayload } from "@supabase/supabase-js" // Importando o tipo correto para o payload
 
 export function MessagesWall() {
   const [messages, setMessages] = useState<Message[]>([])
@@ -37,7 +38,7 @@ export function MessagesWall() {
     // Set up real-time subscription
     const subscription = supabase
       .channel("messages")
-      .on("postgres_changes", { event: "*", schema: "public", table: "messages" }, (payload) => {
+      .on("postgres_changes", { event: "*", schema: "public", table: "messages" }, (payload: RealtimePostgresChangesPayload<Message>) => { // Tipagem corrigida
         console.log("[v0] Messages subscription payload:", payload)
         if (payload.eventType === "INSERT") {
           const newMessage = payload.new as Message

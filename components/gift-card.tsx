@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Gift, ExternalLink, Check } from "lucide-react"
-import type { Gift as GiftType } from "@/lib/supabase/client"
+import type { Gift as GiftType } from "@/lib/supabase/client" // Caminho do import atualizado
 
 interface GiftCardProps {
   gift: GiftType

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { supabase } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client" // Caminho do import atualizado
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -18,6 +18,7 @@ interface Message {
 interface EventSetting {
   setting_key: string
   setting_value: string
+  updated_at: string // Adicionado para corresponder ao uso
 }
 
 export default function AdminPage() {
@@ -52,7 +53,7 @@ export default function AdminPage() {
 
     if (settingsData) {
       const settingsObj = settingsData.reduce(
-        (acc, item) => {
+        (acc: Record<string, string>, item: EventSetting) => { // Tipagem corrigida
           acc[item.setting_key] = item.setting_value
           return acc
         },

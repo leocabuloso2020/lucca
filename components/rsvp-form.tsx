@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Users, Check, Loader2 } from "lucide-react"
-import { supabase } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client" // Caminho do import atualizado
 
 export function RSVPForm() {
   const [formData, setFormData] = useState({
