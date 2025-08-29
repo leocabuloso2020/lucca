@@ -73,9 +73,7 @@ export default function BabyShowerPage() {
       <FloatingElements />
       <MusicPlayer />
 
-      {/* Os pontinhos de navegação foram removidos daqui. */}
-
-      <section id="opening" className="min-h-screen flex items-center justify-center px-4 py-20 relative z-10">
+      <section id="opening" className="min-h-screen flex items-center justify-center px-4 py-16 relative z-10">
         <div className="text-center max-w-4xl mx-auto animate-fade-in-up">
           <div className="mb-8">
             <h1 className="text-6xl md:text-8xl font-serif text-[#3CB371] mb-4 animate-heartbeat">Lucca</h1>
@@ -113,7 +111,7 @@ export default function BabyShowerPage() {
 
       <section
         id="invitation"
-        className="min-h-screen flex items-center justify-center px-4 py-20 bg-white/50 relative z-10"
+        className="flex items-center justify-center px-4 py-16 bg-white/50 relative z-10"
       >
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl md:text-6xl font-serif text-[#3CB371] mb-8">Você está convidado!</h2>
@@ -137,7 +135,7 @@ export default function BabyShowerPage() {
         </div>
       </section>
 
-      <section id="gifts" className="min-h-screen flex items-center justify-center px-4 py-20 relative z-10">
+      <section id="gifts" className="flex items-center justify-center px-4 py-16 relative z-10">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-5xl md:text-6xl font-serif text-[#3CB371] mb-8">Lista de Presentes</h2>
           <p className="text-xl text-[#2d5a3d] mb-8">Algumas sugestões para o nosso pequeno Lucca</p>
@@ -157,17 +155,17 @@ export default function BabyShowerPage() {
         </div>
       </section>
 
-      <section id="rsvp" className="min-h-screen flex items-center justify-center px-4 py-20 bg-white/50 relative z-10">
+      <section id="rsvp" className="flex items-center justify-center px-4 py-16 bg-white/50 relative z-10">
         <RSVPForm />
       </section>
 
-      <section id="messages" className="min-h-screen flex items-center justify-center px-4 py-20 relative z-10">
+      <section id="messages" className="flex items-center justify-center px-4 py-16 relative z-10">
         <MessagesWall />
       </section>
 
       <section
         id="location"
-        className="min-h-screen flex items-center justify-center px-4 py-20 bg-white/50 relative z-10"
+        className="flex items-center justify-center px-4 py-16 bg-white/50 relative z-10"
       >
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl md:text-6xl font-serif text-[#3CB371] mb-8">Como Chegar</h2>
@@ -189,7 +187,7 @@ export default function BabyShowerPage() {
         </div>
       </section>
 
-      <section id="closing" className="min-h-screen flex items-center justify-center px-4 py-20 relative z-10">
+      <section id="closing" className="flex items-center justify-center px-4 py-16 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl md:text-6xl font-serif text-[#3CB371] mb-8">Até Breve!</h2>
           <div className="bg-gradient-to-br from-white to-[#f0f8f0] rounded-2xl p-8 md:p-12 shadow-xl border border-[#3CB371]/30">
