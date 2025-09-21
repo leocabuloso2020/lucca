@@ -108,9 +108,6 @@ export function MusicPlayer() {
       </Button>
       <audio ref={audioRef} loop preload="metadata" onEnded={() => setIsPlaying(false)}>
         <source src="/pvc.mp3" type="audio/mpeg" />
-        {/* Fallback sources if custom music is not available */}
-        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav" />
-        <source src="https://actions.google.com/sounds/v1/ambiences/lullaby.ogg" type="audio/ogg" />
       </audio>
       {hasError && (
         <div className="absolute top-14 right-0 bg-red-100 text-red-800 text-xs px-2 py-1 rounded shadow-lg">
