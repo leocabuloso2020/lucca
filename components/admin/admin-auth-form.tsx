@@ -15,7 +15,7 @@ const adminLoginSchema = z.object({
   password: z.string().min(6, { message: "A senha deve ter pelo menos 6 caracteres." }),
 })
 
-type AdminLoginFormInputs = z.infer<typeof adminLoginSchema>
+export type AdminLoginFormInputs = z.infer<typeof adminLoginSchema> // Adicionado 'export'
 
 interface AdminAuthFormProps {
   onLogin: (values: AdminLoginFormInputs) => Promise<void>
@@ -61,7 +61,7 @@ export function AdminAuthForm({ onLogin, isSubmitting }: AdminAuthFormProps) {
                 {...form.register("password")}
               />
               {form.formState.errors.password && (
-                <p className className="text-red-500 text-sm mt-1">{form.formState.errors.password.message}</p>
+                <p className="text-red-500 text-sm mt-1">{form.formState.errors.password.message}</p>
               )}
             </div>
             <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" disabled={isSubmitting}>

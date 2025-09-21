@@ -7,8 +7,8 @@ import { toast } from "sonner"
 import { AdminLoadingSpinner } from "@/components/admin/admin-loading-spinner"
 import { AdminAuthForm } from "@/components/admin/admin-auth-form"
 import { AdminDashboardLayout } from "@/components/admin/admin-dashboard-layout"
-import { type AdminLoginFormInputs } from "@/components/admin/admin-auth-form"
-import { type CreateAdminUserFormInputs } from "@/components/admin/admin-manage-admins-tab"
+import { type AdminLoginFormInputs } from "@/components/admin/admin-auth-form" // Importação corrigida
+import { type CreateAdminUserFormInputs } from "@/components/admin/admin-manage-admins-tab" // Importação corrigida
 
 interface EventSetting {
   setting_key: string

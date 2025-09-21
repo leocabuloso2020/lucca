@@ -17,7 +17,7 @@ const createAdminUserSchema = z.object({
   last_name: z.string().min(1, { message: "Sobrenome é obrigatório." }),
 })
 
-type CreateAdminUserFormInputs = z.infer<typeof createAdminUserSchema>
+export type CreateAdminUserFormInputs = z.infer<typeof createAdminUserSchema> // Adicionado 'export'
 
 interface AdminManageAdminsTabProps {
   onCreateAdminUser: (values: CreateAdminUserFormInputs) => Promise<void>

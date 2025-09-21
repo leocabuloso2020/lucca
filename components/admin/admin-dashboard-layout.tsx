@@ -8,8 +8,8 @@ import { AdminMessagesTab } from "./admin-messages-tab"
 import { AdminSettingsTab } from "./admin-settings-tab"
 import { AdminManageAdminsTab } from "./admin-manage-admins-tab"
 import { type Message as MessageType, type Profile } from "@/lib/supabase/client"
-import { type AdminLoginFormInputs } from "./admin-auth-form" // Importando o tipo para uso futuro, se necessário
-import { type CreateAdminUserFormInputs } from "./admin-manage-admins-tab"
+import { type AdminLoginFormInputs } from "./admin-auth-form" // Importação corrigida
+import { type CreateAdminUserFormInputs } from "./admin-manage-admins-tab" // Importação corrigida
 
 interface EventSetting {
   setting_key: string
