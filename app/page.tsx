@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import { Heart, Gift, MapPin, Calendar, Clock, Loader2 } from "lucide-react"
-import { supabase, type Gift as GiftType } from "@/lib/supabase/client"
-import { GiftCard } from "@/components/gift-card"
+import { Heart, MapPin, Calendar, Clock, Loader2 } from "lucide-react"
+import { supabase } from "@/lib/supabase/client"
 import { FloatingElements } from "@/components/floating-elements"
 import { MusicPlayer } from "@/components/music-player"
 import { CountdownTimer } from "@/components/countdown-timer"
@@ -12,53 +11,10 @@ import { RSVPForm } from "@/components/rsvp-form"
 import { MessagesWall } from "@/components/messages-wall"
 
 export default function BabyShowerPage() {
-  const [gifts, setGifts] = useState<GiftType[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false) // Mantido, mas pode ser removido se não houver outras cargas
   const [currentSection, setCurrentSection] = useState("opening") // Mantido para o estado da seção, caso seja usado em outro lugar
 
-  useEffect(() => {
-    // Adicionado para depuração: verificar a variável de ambiente
-    console.log("NEXT_PUBLIC_SUPABASE_URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
-    console.log("NEXT_PUBLIC_SUPABASE_ANON_KEY:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-
-    fetchGifts()
-  }, [])
-
   // O useEffect para rolagem automática foi removido aqui.
-
-  const fetchGifts = async () => {
-    try {
-      const { data, error } = await supabase.from("gifts").select("*").order("created_at", { ascending: true })
-
-      if (error) throw error
-      setGifts(data || [])
-    } catch (error) {
-      console.error("Error fetching gifts:", error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleGiftPurchase = async (giftId: number, purchaserName: string) => {
-    try {
-      const { error } = await supabase
-        .from("gifts")
-        .update({
-          is_purchased: true,
-          purchased_by: purchaserName,
-        })
-        .eq("id", giftId)
-
-      if (error) throw error
-
-      // Update local state
-      setGifts(
-        gifts.map((gift) => (gift.id === giftId ? { ...gift, is_purchased: true, purchased_by: purchaserName } : gift)),
-      )
-    } catch (error) {
-      console.error("Error updating gift:", error)
-    }
-  }
 
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({
@@ -124,34 +80,9 @@ export default function BabyShowerPage() {
                   Será um momento especial de união, carinho e muita felicidade. Sua presença tornará este dia ainda
                   mais especial!
                 </p>
-                <div className="flex items-center justify-center gap-4 text-[#DAA520] text-2xl mt-8">
-                  <Gift />
-                  <span className="font-serif">Presentes são bem-vindos, mas sua presença é o maior presente!</span>
-                  <Gift />
-                </div>
               </div>
             </CardContent>
           </Card>
-        </div>
-      </section>
-
-      <section id="gifts" className="flex items-center justify-center px-4 py-16 relative z-10">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-5xl md:text-6xl font-serif text-[#3CB371] mb-8">Lista de Presentes</h2>
-          <p className="text-xl text-[#2d5a3d] mb-8">Algumas sugestões para o nosso pequeno Lucca</p>
-
-          {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="animate-spin text-[#3CB371]" size={48} />
-              <span className="ml-4 text-[#2d5a3d]">Carregando presentes...</span>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {gifts.map((gift) => (
-                <GiftCard key={gift.id} gift={gift} onPurchase={handleGiftPurchase} />
-              ))}
-            </div>
-          )}
         </div>
       </section>
 

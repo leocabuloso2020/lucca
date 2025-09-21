@@ -5,18 +5,6 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-export type Gift = {
-  id: number
-  name: string
-  description: string | null
-  price_range: string | null
-  store_link: string | null
-  image_url: string | null
-  is_purchased: boolean
-  purchased_by: string | null
-  created_at: string
-}
-
 export type Message = {
   id: number
   author_name: string
