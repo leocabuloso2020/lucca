@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { supabase, type Message as MessageType, type Profile } from "@/lib/supabase/client"
+import { supabase, type Message as MessageType, type Profile } from "@/src/integrations/supabase/client" // Caminho corrigido
 import { toast } from "sonner"
 import { AdminLoadingSpinner } from "@/components/admin/admin-loading-spinner"
 import { AdminAuthForm } from "@/components/admin/admin-auth-form"
