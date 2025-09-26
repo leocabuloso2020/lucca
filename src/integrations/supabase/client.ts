@@ -33,7 +33,7 @@ export type RSVP = {
   email: string | null
   phone: string | null
   will_attend: boolean
-  number_of_guests: number
+  number_of_guests: number | null // Alterado para permitir null
   dietary_restrictions: string | null
   message: string | null
   created_at: string

@@ -10,7 +10,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Users, Check, Loader2 } from "lucide-react"
-import { supabase } from "@/lib/supabase/client" // Caminho do import atualizado
+import { supabase } from "@/lib/supabase/client"
+import { toast } from "sonner" // Import Sonner for notifications
 
 export function RSVPForm() {
   const [formData, setFormData] = useState({
@@ -36,6 +37,7 @@ export function RSVPForm() {
 
     if (!formData.name.trim() || !formData.will_attend) {
       setError("Por favor, preencha os campos obrigatórios.")
+      toast.error("Por favor, preencha os campos obrigatórios.")
       return
     }
 
@@ -49,18 +51,25 @@ export function RSVPForm() {
           email: formData.email.trim() || null,
           phone: formData.phone.trim() || null,
           will_attend: formData.will_attend === "yes",
-          number_of_guests: formData.will_attend === "yes" ? formData.number_of_guests : 0,
+          // Se não for comparecer, number_of_guests deve ser null, não 0, para campos opcionais.
+          number_of_guests: formData.will_attend === "yes" ? formData.number_of_guests : null,
           dietary_restrictions: formData.dietary_restrictions.trim() || null,
           message: formData.message.trim() || null,
         },
       ])
 
-      if (error) throw error
+      if (error) {
+        console.error("Supabase error details:", error.message, error.details, error.hint);
+        throw error;
+      }
 
       setIsSubmitted(true)
-    } catch (error) {
+      toast.success("Confirmação de presença enviada com sucesso!")
+    } catch (error: any) {
       console.error("Error submitting RSVP:", error)
-      setError("Erro ao enviar confirmação. Tente novamente.")
+      const errorMessage = error.message || "Erro desconhecido ao enviar confirmação."
+      setError(`Erro ao enviar confirmação: ${errorMessage}. Tente novamente.`)
+      toast.error(`Erro: ${errorMessage}`)
     } finally {
       setIsSubmitting(false)
     }
