@@ -5,9 +5,7 @@ import { useRouter } from "next/navigation"
 import { supabase, type Message as MessageType, type Profile } from "@/src/integrations/supabase/client"
 import { toast } from "sonner"
 import { AdminLoadingSpinner } from "@/components/admin/admin-loading-spinner"
-import { AdminAuthForm } from "@/components/admin/admin-auth-form"
 import { AdminDashboardLayout } from "@/components/admin/admin-dashboard-layout"
-import { type AdminLoginFormInputs } from "@/components/admin/admin-auth-form"
 import { type CreateAdminUserFormInputs } from "@/components/admin/admin-manage-admins-tab"
 
 interface EventSetting {
@@ -22,82 +20,68 @@ export default function AdminPage() {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loadingAuth, setLoadingAuth] = useState(true)
   const [loadingData, setLoadingData] = useState(false)
-  const [isSubmittingLogin, setIsSubmittingLogin] = useState(false)
   const [isCreatingAdmin, setIsCreatingAdmin] = useState(false)
 
   const [messages, setMessages] = useState<MessageType[]>([])
   const [settings, setSettings] = useState<Record<string, string>>({})
 
   useEffect(() => {
-    let isMounted = true; // Flag para evitar atualizações de estado em componentes desmontados
+    let isMounted = true;
 
     const handleAuthSession = async (currentSession: any) => {
       if (!isMounted) return;
 
       setSession(currentSession);
       if (currentSession) {
-        // Buscar perfil apenas se houver uma sessão
         const { data, error } = await supabase
           .from("profiles")
           .select("*")
           .eq("id", currentSession.user.id)
           .single();
 
-        if (!isMounted) return; // Verificar novamente após a chamada assíncrona
+        if (!isMounted) return;
 
         if (error) {
           console.error("Error fetching profile:", error);
           toast.error("Erro ao carregar perfil do usuário.");
           setProfile(null);
-          await supabase.auth.signOut(); // Deslogar se a busca do perfil falhar
-        } else {
+          await supabase.auth.signOut();
+          router.push("/admin/login");
+        } else if (data?.is_admin) {
           setProfile(data as Profile);
+        } else {
+          toast.error("Você não tem permissão de administrador.");
+          await supabase.auth.signOut();
+          router.push("/admin/login");
         }
       } else {
         setProfile(null);
+        router.push("/admin/login");
       }
-      setLoadingAuth(false); // Sempre definir como false após a verificação inicial de autenticação e tentativa de busca de perfil
+      setLoadingAuth(false);
     };
 
-    // Verificação inicial da sessão
     supabase.auth.getSession().then(({ data: { session } }) => {
       handleAuthSession(session);
     });
 
-    // Ouvir mudanças no estado de autenticação
     const { data: authListener } = supabase.auth.onAuthStateChange((event, currentSession) => {
-      // Reagir apenas a mudanças reais, não ao carregamento inicial se já foi tratado por getSession
       if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
         handleAuthSession(currentSession);
       }
     });
 
     return () => {
-      isMounted = false; // Limpeza
+      isMounted = false;
       authListener.subscription.unsubscribe();
     };
-  }, []); // Array de dependências vazio significa que ele é executado apenas uma vez na montagem
+  }, [router]);
 
   useEffect(() => {
     if (profile?.is_admin) {
       loadDashboardData()
     }
   }, [profile])
-
-  const handleLogin = async (values: AdminLoginFormInputs) => {
-    setIsSubmittingLogin(true)
-    const { error } = await supabase.auth.signInWithPassword({
-      email: values.email,
-      password: values.password,
-    })
-
-    if (error) {
-      toast.error(error.message)
-    } else {
-      toast.success("Login realizado com sucesso!")
-    }
-    setIsSubmittingLogin(false)
-  }
 
   const handleLogout = async () => {
     setLoadingAuth(true)
@@ -108,7 +92,7 @@ export default function AdminPage() {
       toast.success("Logout realizado com sucesso!")
       setSession(null)
       setProfile(null)
-      router.push("/admin")
+      router.push("/admin/login")
     }
     setLoadingAuth(false)
   }
@@ -205,12 +189,10 @@ export default function AdminPage() {
 
       if (!response.ok) {
         console.error("Full error response from API route:", data);
-        // Provide a more detailed error message from the API route/Edge Function
         throw new Error(data.error || `Falha ao criar usuário admin. Status: ${response.status}. Detalhes: ${JSON.stringify(data)}`);
       }
 
       toast.success("Novo usuário admin criado com sucesso!");
-      // The form reset will be handled by the AdminManageAdminsTab component
     } catch (error: any) {
       console.error("Error creating admin user in frontend:", error);
       toast.error(error.message || "Erro desconhecido ao criar usuário admin.");
@@ -219,12 +201,8 @@ export default function AdminPage() {
     }
   }
 
-  if (loadingAuth) {
+  if (loadingAuth || !profile?.is_admin) {
     return <AdminLoadingSpinner />
-  }
-
-  if (!session || !profile?.is_admin) {
-    return <AdminAuthForm onLogin={handleLogin} isSubmitting={isSubmittingLogin} />
   }
 
   return (

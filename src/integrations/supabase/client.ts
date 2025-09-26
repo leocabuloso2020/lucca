@@ -44,5 +44,5 @@ export type Profile = {
   id: string;
   first_name: string | null;
   last_name: string | null;
-  is_admin: boolean;
+  is_admin: boolean; // Adicionado is_admin
 };
