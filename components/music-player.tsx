@@ -16,6 +16,7 @@ export function MusicPlayer() {
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = 0.3
+      audioRef.current.loop = false; // Explicitamente garantindo que não haja loop
 
       const audio = audioRef.current
 
@@ -39,14 +40,20 @@ export function MusicPlayer() {
         setIsAutoplayBlocked(false)
       }
 
+      const handleEnded = () => {
+        setIsPlaying(false); // Garante que o estado seja atualizado quando a música termina
+      };
+
       audio.addEventListener("canplay", handleCanPlay)
       audio.addEventListener("error", handleError)
       audio.addEventListener("loadstart", handleLoadStart)
+      audio.addEventListener("ended", handleEnded); // Adiciona listener para o evento 'ended'
 
       return () => {
         audio.removeEventListener("canplay", handleCanPlay)
         audio.removeEventListener("error", handleError)
         audio.removeEventListener("loadstart", handleLoadStart)
+        audio.removeEventListener("ended", handleEnded); // Limpa o listener
       }
     }
   }, [])
@@ -129,7 +136,7 @@ export function MusicPlayer() {
           {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
         </Button>
       </div>
-      <audio ref={audioRef} preload="metadata" onEnded={() => setIsPlaying(false)} loop={false}>
+      <audio ref={audioRef} preload="metadata" onEnded={() => setIsPlaying(false)}>
         <source src="/pvc.mp3" type="audio/mpeg" />
       </audio>
       {(isAudioUnavailable || isAutoplayBlocked) && (
