@@ -65,12 +65,19 @@ export function MusicPlayer() {
       } catch (error) {
         console.error("[MusicPlayer] Autoplay prevented or audio error:", error)
         setIsLoading(false)
-        setHasError(true)
-        setIsPlaying(false)
-        toast.error("Não foi possível iniciar a música automaticamente. Tente novamente.")
+        setIsPlaying(false) // Garante que isPlaying seja falso se a reprodução falhar
+        
+        // Verifica se o erro é devido à política de reprodução automática do navegador
+        if ((error as DOMException)?.name === "NotAllowedError") {
+          setHasError(true); // Marca como erro para desabilitar o botão
+          toast.error("O navegador bloqueou a reprodução automática. Por favor, clique no botão para tocar a música.");
+        } else {
+          setHasError(true); // Marca como erro para outros problemas de áudio
+          toast.error("Erro ao iniciar a música. Verifique o arquivo de áudio.");
+        }
       }
     } else if (hasError) {
-      toast.error("A música não está disponível para tocar.")
+      toast.error("A música não está disponível para tocar devido a um erro anterior.");
     }
   }
 
@@ -106,7 +113,7 @@ export function MusicPlayer() {
       >
         {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
       </Button>
-      <audio ref={audioRef} preload="metadata" onEnded={() => setIsPlaying(false)}>
+      <audio ref={audioRef} preload="metadata" onEnded={() => setIsPlaying(false)} loop={false}>
         <source src="/pvc.mp3" type="audio/mpeg" />
       </audio>
       {hasError && (
