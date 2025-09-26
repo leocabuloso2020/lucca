@@ -18,44 +18,57 @@ export function MusicPlayer() {
       audioRef.current.volume = 0.3
       audioRef.current.loop = false; // Explicitamente garantindo que não haja loop
 
-      const audio = audioRef.current
+      const audio = audioRef.current;
+      let loadingTimeout: NodeJS.Timeout; // Variável para o timeout
 
       const handleCanPlay = () => {
         console.log("[MusicPlayer] Audio can play. Setting isLoading to false.");
-        setIsLoading(false)
-        setIsAudioUnavailable(false)
-        setIsAutoplayBlocked(false) // Resetar se puder tocar
-      }
+        clearTimeout(loadingTimeout); // Limpa o timeout em caso de sucesso
+        setIsLoading(false);
+        setIsAudioUnavailable(false);
+        setIsAutoplayBlocked(false);
+      };
 
       const handleError = () => {
         console.error("[MusicPlayer] Audio failed to load or play. Setting isAudioUnavailable to true.");
-        setIsLoading(false)
-        setIsAudioUnavailable(true) // Este é um erro real de carregamento
-        setIsPlaying(false) // Garante que o estado de reprodução seja falso em caso de erro
+        clearTimeout(loadingTimeout); // Limpa o timeout em caso de erro
+        setIsLoading(false);
+        setIsAudioUnavailable(true); // Este é um erro real de carregamento
+        setIsPlaying(false); // Garante que o estado de reprodução seja falso em caso de erro
         toast.error("Erro ao carregar a música. Verifique o arquivo de áudio.")
-      }
+      };
 
       const handleLoadStart = () => {
         console.log("[MusicPlayer] Audio load start. Setting isLoading to true.");
-        setIsLoading(true)
-        setIsAudioUnavailable(false) // Resetar erros em nova tentativa de carregamento
-        setIsAutoplayBlocked(false)
-      }
+        setIsLoading(true);
+        setIsAudioUnavailable(false); // Resetar erros em nova tentativa de carregamento
+        setIsAutoplayBlocked(false);
+
+        // Define um timeout para o carregamento (ex: 10 segundos)
+        loadingTimeout = setTimeout(() => {
+          console.warn("[MusicPlayer] Audio loading timed out. Assuming audio is unavailable.");
+          setIsLoading(false);
+          setIsAudioUnavailable(true);
+          setIsPlaying(false);
+          toast.error("A música demorou muito para carregar ou está indisponível.");
+        }, 10000); // 10 segundos
+      };
 
       const handleEnded = () => {
         console.log("[MusicPlayer] Audio ended. Setting isPlaying to false.");
         setIsPlaying(false); // Garante que o estado seja atualizado quando a música termina
       };
 
-      audio.addEventListener("canplay", handleCanPlay)
-      audio.addEventListener("error", handleError)
-      audio.addEventListener("loadstart", handleLoadStart)
+      audio.addEventListener("canplay", handleCanPlay);
+      audio.addEventListener("error", handleError);
+      audio.addEventListener("loadstart", handleLoadStart);
       audio.addEventListener("ended", handleEnded); // Adiciona listener para o evento 'ended'
 
       return () => {
-        audio.removeEventListener("canplay", handleCanPlay)
-        audio.removeEventListener("error", handleError)
-        audio.removeEventListener("loadstart", handleLoadStart)
+        clearTimeout(loadingTimeout); // Limpa o timeout ao desmontar o componente
+        audio.removeEventListener("canplay", handleCanPlay);
+        audio.removeEventListener("error", handleError);
+        audio.removeEventListener("loadstart", handleLoadStart);
         audio.removeEventListener("ended", handleEnded); // Limpa o listener
       }
     }
