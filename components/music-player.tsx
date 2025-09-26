@@ -21,26 +21,29 @@ export function MusicPlayer() {
       const audio = audioRef.current
 
       const handleCanPlay = () => {
+        console.log("[MusicPlayer] Audio can play. Setting isLoading to false.");
         setIsLoading(false)
         setIsAudioUnavailable(false)
         setIsAutoplayBlocked(false) // Resetar se puder tocar
       }
 
       const handleError = () => {
+        console.error("[MusicPlayer] Audio failed to load or play. Setting isAudioUnavailable to true.");
         setIsLoading(false)
         setIsAudioUnavailable(true) // Este é um erro real de carregamento
-        setIsPlaying(false)
+        setIsPlaying(false) // Garante que o estado de reprodução seja falso em caso de erro
         toast.error("Erro ao carregar a música. Verifique o arquivo de áudio.")
-        console.error("[MusicPlayer] Audio failed to load or play.")
       }
 
       const handleLoadStart = () => {
+        console.log("[MusicPlayer] Audio load start. Setting isLoading to true.");
         setIsLoading(true)
         setIsAudioUnavailable(false) // Resetar erros em nova tentativa de carregamento
         setIsAutoplayBlocked(false)
       }
 
       const handleEnded = () => {
+        console.log("[MusicPlayer] Audio ended. Setting isPlaying to false.");
         setIsPlaying(false); // Garante que o estado seja atualizado quando a música termina
       };
 
@@ -73,6 +76,7 @@ export function MusicPlayer() {
       }
 
       setIsLoading(true)
+      setIsPlaying(false) // Garante que isPlaying seja falso enquanto tenta carregar/tocar
       try {
         await audioRef.current.play()
         setIsPlaying(true)
@@ -83,7 +87,7 @@ export function MusicPlayer() {
       } catch (error) {
         console.error("[MusicPlayer] Autoplay prevented or audio error:", error)
         setIsLoading(false)
-        setIsPlaying(false)
+        setIsPlaying(false) // Garante que isPlaying seja falso em caso de erro
         
         if ((error as DOMException)?.name === "NotAllowedError") {
           setIsAutoplayBlocked(true); // Autoplay foi bloqueado, mas o botão deve continuar clicável para reprodução manual
@@ -136,7 +140,7 @@ export function MusicPlayer() {
           {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
         </Button>
       </div>
-      <audio ref={audioRef} preload="metadata" onEnded={() => setIsPlaying(false)}>
+      <audio ref={audioRef} preload="metadata">
         <source src="/pvc.mp3" type="audio/mpeg" />
       </audio>
       {(isAudioUnavailable || isAutoplayBlocked) && (
