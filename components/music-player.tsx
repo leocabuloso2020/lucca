@@ -106,7 +106,7 @@ export function MusicPlayer() {
       >
         {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
       </Button>
-      <audio ref={audioRef} loop preload="metadata" onEnded={() => setIsPlaying(false)}>
+      <audio ref={audioRef} preload="metadata" onEnded={() => setIsPlaying(false)}>
         <source src="/pvc.mp3" type="audio/mpeg" />
       </audio>
       {hasError && (
