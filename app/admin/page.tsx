@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { supabase, type Message as MessageType, type Profile } from "@/src/integrations/supabase/client" // Caminho corrigido
+import { supabase, type Message as MessageType, type Profile } from "@/src/integrations/supabase/client"
 import { toast } from "sonner"
 import { AdminLoadingSpinner } from "@/components/admin/admin-loading-spinner"
 import { AdminAuthForm } from "@/components/admin/admin-auth-form"
@@ -20,10 +20,10 @@ export default function AdminPage() {
   const router = useRouter()
   const [session, setSession] = useState<any>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
-  const [loadingAuth, setLoadingAuth] = useState(true) // Loading for auth state
-  const [loadingData, setLoadingData] = useState(false) // Loading for dashboard data
-  const [isSubmittingLogin, setIsSubmittingLogin] = useState(false) // For login form submission
-  const [isCreatingAdmin, setIsCreatingAdmin] = useState(false) // For create admin form submission
+  const [loadingAuth, setLoadingAuth] = useState(true)
+  const [loadingData, setLoadingData] = useState(false)
+  const [isSubmittingLogin, setIsSubmittingLogin] = useState(false)
+  const [isCreatingAdmin, setIsCreatingAdmin] = useState(false)
 
   const [messages, setMessages] = useState<MessageType[]>([])
   const [settings, setSettings] = useState<Record<string, string>>({})
@@ -72,7 +72,7 @@ export default function AdminPage() {
       toast.error("Erro ao carregar perfil do usuário.")
       setProfile(null)
       setLoadingAuth(false)
-      await supabase.auth.signOut() // Force logout if profile can't be fetched
+      await supabase.auth.signOut()
     } else {
       setProfile(data as Profile)
       setLoadingAuth(false)
@@ -90,7 +90,6 @@ export default function AdminPage() {
       toast.error(error.message)
     } else {
       toast.success("Login realizado com sucesso!")
-      // Session listener will handle setting session and profile
     }
     setIsSubmittingLogin(false)
   }
@@ -104,7 +103,7 @@ export default function AdminPage() {
       toast.success("Logout realizado com sucesso!")
       setSession(null)
       setProfile(null)
-      router.push("/admin") // Redirect to login page
+      router.push("/admin")
     }
     setLoadingAuth(false)
   }
@@ -112,7 +111,6 @@ export default function AdminPage() {
   const loadDashboardData = async () => {
     setLoadingData(true)
 
-    // Carregar mensagens
     const { data: messagesData, error: messagesError } = await supabase.from("messages").select("*").order("created_at", { ascending: false })
     if (messagesError) {
       console.error("Error fetching messages:", messagesError)
@@ -121,7 +119,6 @@ export default function AdminPage() {
       setMessages(messagesData || [])
     }
 
-    // Carregar configurações
     const { data: settingsData, error: settingsError } = await supabase.from("event_settings").select("*")
     if (settingsError) {
       console.error("Error fetching settings:", settingsError)
@@ -202,13 +199,15 @@ export default function AdminPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Erro ao criar usuário admin.');
+        console.error("Full error response from API route:", data);
+        // Provide a more detailed error message from the API route/Edge Function
+        throw new Error(data.error || `Falha ao criar usuário admin. Status: ${response.status}. Detalhes: ${JSON.stringify(data)}`);
       }
 
       toast.success("Novo usuário admin criado com sucesso!");
-      // No need to reset form here, it's handled by the child component
+      // The form reset will be handled by the AdminManageAdminsTab component
     } catch (error: any) {
-      console.error("Error creating admin user:", error);
+      console.error("Error creating admin user in frontend:", error);
       toast.error(error.message || "Erro desconhecido ao criar usuário admin.");
     } finally {
       setIsCreatingAdmin(false)

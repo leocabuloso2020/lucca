@@ -17,7 +17,7 @@ const createAdminUserSchema = z.object({
   last_name: z.string().min(1, { message: "Sobrenome é obrigatório." }),
 })
 
-export type CreateAdminUserFormInputs = z.infer<typeof createAdminUserSchema> // Adicionado 'export'
+export type CreateAdminUserFormInputs = z.infer<typeof createAdminUserSchema>
 
 interface AdminManageAdminsTabProps {
   onCreateAdminUser: (values: CreateAdminUserFormInputs) => Promise<void>
@@ -35,6 +35,16 @@ export function AdminManageAdminsTab({ onCreateAdminUser, isSubmitting }: AdminM
     },
   })
 
+  const onSubmit = async (values: CreateAdminUserFormInputs) => {
+    try {
+      await onCreateAdminUser(values);
+      form.reset(); // Reset the form on successful submission
+    } catch (error) {
+      // Error handling is done in the parent component (AdminPage)
+      console.error("Error in AdminManageAdminsTab onSubmit:", error);
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -44,7 +54,7 @@ export function AdminManageAdminsTab({ onCreateAdminUser, isSubmitting }: AdminM
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={form.handleSubmit(onCreateAdminUser)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <Label htmlFor="new-admin-email">E-mail</Label>
             <Input
