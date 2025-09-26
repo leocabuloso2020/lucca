@@ -10,11 +10,40 @@ import { CountdownTimer } from "@/components/countdown-timer"
 import { RSVPForm } from "@/components/rsvp-form"
 import { MessagesWall } from "@/components/messages-wall"
 
-export default function BabyShowerPage() {
-  const [loading, setLoading] = useState(false) // Mantido, mas pode ser removido se não houver outras cargas
-  const [currentSection, setCurrentSection] = useState("opening") // Mantido para o estado da seção, caso seja usado em outro lugar
+interface EventSetting {
+  setting_key: string
+  setting_value: string
+  updated_at: string
+}
 
-  // O useEffect para rolagem automática foi removido aqui.
+export default function BabyShowerPage() {
+  const [loading, setLoading] = useState(true)
+  const [eventSettings, setEventSettings] = useState<Record<string, string>>({})
+  const [currentSection, setCurrentSection] = useState("opening")
+
+  useEffect(() => {
+    const fetchEventSettings = async () => {
+      setLoading(true)
+      const { data, error } = await supabase.from("event_settings").select("*")
+
+      if (error) {
+        console.error("Error fetching event settings:", error)
+        // Fallback to default values or show an error message
+      } else if (data) {
+        const settingsObj = data.reduce(
+          (acc: Record<string, string>, item: EventSetting) => {
+            acc[item.setting_key] = item.setting_value
+            return acc
+          },
+          {} as Record<string, string>,
+        )
+        setEventSettings(settingsObj)
+      }
+      setLoading(false)
+    }
+
+    fetchEventSettings()
+  }, [])
 
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({
@@ -22,6 +51,39 @@ export default function BabyShowerPage() {
       block: "center",
     })
     setCurrentSection(sectionId)
+  }
+
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "Data a definir"
+    try {
+      return new Date(dateString).toLocaleDateString("pt-BR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    } catch (e) {
+      console.error("Invalid date string for formatting:", dateString, e)
+      return "Data inválida"
+    }
+  }
+
+  const formatTime = (timeString: string) => {
+    if (!timeString) return "Hora a definir"
+    // Assuming timeString is in "HH:MM" format
+    return timeString
+  }
+
+  const eventDate = eventSettings.event_date || "2025-03-15" // Default if not set
+  const eventTime = eventSettings.event_time || "14:00" // Default if not set
+  const eventDateTime = `${eventDate}T${eventTime}:00` // Combine for CountdownTimer
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin text-[#3CB371]" size={48} />
+        <span className="ml-4 text-[#2d5a3d]">Carregando informações do evento...</span>
+      </div>
+    )
   }
 
   return (
@@ -32,7 +94,9 @@ export default function BabyShowerPage() {
       <section id="opening" className="min-h-screen flex items-center justify-center px-4 py-16 relative z-10">
         <div className="text-center max-w-4xl mx-auto animate-fade-in-up">
           <div className="mb-8">
-            <h1 className="text-6xl md:text-8xl font-serif text-[#3CB371] mb-4 animate-heartbeat">Lucca</h1>
+            <h1 className="text-6xl md:text-8xl font-serif text-[#3CB371] mb-4 animate-heartbeat">
+              {eventSettings.event_title || "Lucca"}
+            </h1>
             <div className="flex items-center justify-center gap-4 text-[#DAA520] text-4xl mb-6">
               <Heart className="animate-heartbeat" />
               <span className="font-serif text-3xl">está chegando!</span>
@@ -48,20 +112,20 @@ export default function BabyShowerPage() {
             <div className="flex flex-col md:flex-row items-center justify-center gap-6 text-[#2d5a3d]">
               <div className="flex items-center gap-2">
                 <Calendar className="text-[#3CB371]" />
-                <span className="font-medium">15 de Março, 2025</span>
+                <span className="font-medium">{formatDate(eventDate)}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="text-[#3CB371]" />
-                <span className="font-medium">14:00 às 18:00</span>
+                <span className="font-medium">{formatTime(eventTime)}</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="text-[#3CB371]" />
-                <span className="font-medium">Salão de Festas</span>
+                <span className="font-medium">{eventSettings.event_address || "Salão de Festas"}</span>
               </div>
             </div>
           </div>
 
-          <CountdownTimer />
+          <CountdownTimer targetDateTime={eventDateTime} />
         </div>
       </section>
 
@@ -105,9 +169,11 @@ export default function BabyShowerPage() {
               <div className="flex items-center justify-center gap-2 mb-6">
                 <MapPin className="text-[#3CB371]" size={32} />
                 <div className="text-left">
-                  <h3 className="font-serif text-2xl text-[#2d5a3d] mb-2">Salão de Festas Villa Verde</h3>
-                  <p className="text-[#2d5a3d]">Rua das Flores, 123 - Jardim Primavera</p>
-                  <p className="text-[#2d5a3d]">São Paulo - SP, CEP: 01234-567</p>
+                  <h3 className="font-serif text-2xl text-[#2d5a3d] mb-2">
+                    {eventSettings.event_title || "Chá de Bebê do Lucca"}
+                  </h3>
+                  <p className="text-[#2d5a3d]">{eventSettings.event_address || "Rua das Flores, 123 - Jardim Primavera"}</p>
+                  <p className="text-[#2d5a3d]">São Paulo - SP, CEP: 01234-567</p> {/* Keep as placeholder or add more settings */}
                 </div>
               </div>
               <div className="bg-[#f0f8f0] rounded-lg p-6 mt-6">

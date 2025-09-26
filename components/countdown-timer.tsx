@@ -3,7 +3,11 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 
-export function CountdownTimer() {
+interface CountdownTimerProps {
+  targetDateTime: string // Expected format: "YYYY-MM-DDTHH:MM:SS"
+}
+
+export function CountdownTimer({ targetDateTime }: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -12,7 +16,7 @@ export function CountdownTimer() {
   })
 
   useEffect(() => {
-    const targetDate = new Date("2025-03-15T14:00:00").getTime()
+    const targetDate = new Date(targetDateTime).getTime()
 
     const interval = setInterval(() => {
       const now = new Date().getTime()
@@ -25,11 +29,14 @@ export function CountdownTimer() {
           minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
           seconds: Math.floor((difference % (1000 * 60)) / 1000),
         })
+      } else {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+        clearInterval(interval)
       }
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [targetDateTime])
 
   return (
     <Card className="bg-white/90 backdrop-blur-sm border-[#3CB371]/30 shadow-lg">
