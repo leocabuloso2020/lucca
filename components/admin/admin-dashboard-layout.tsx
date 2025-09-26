@@ -3,11 +3,12 @@
 import type React from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { LogOut, MessageSquare, Settings, UserPlus } from "lucide-react"
+import { LogOut, MessageSquare, Settings, UserPlus, Users } from "lucide-react" // Import Users icon
 import { AdminMessagesTab } from "./admin-messages-tab"
 import { AdminSettingsTab } from "./admin-settings-tab"
 import { AdminManageAdminsTab } from "./admin-manage-admins-tab"
-import { type Message as MessageType, type Profile } from "@/src/integrations/supabase/client" // Caminho corrigido
+import { AdminRsvpTab } from "./admin-rsvp-tab" // Import the new RSVP tab
+import { type Message as MessageType, type Profile, type RSVP as RSVPType } from "@/src/integrations/supabase/client"
 import { type AdminLoginFormInputs } from "./admin-auth-form"
 import { type CreateAdminUserFormInputs } from "./admin-manage-admins-tab"
 
@@ -20,11 +21,14 @@ interface EventSetting {
 interface AdminDashboardLayoutProps {
   profile: Profile | null
   messages: MessageType[]
+  rsvps: RSVPType[] // Add rsvps prop
   settings: Record<string, string>
   loadingData: boolean
   onLogout: () => Promise<void>
   onDeleteMessage: (id: number) => Promise<void>
   onToggleMessageApproval: (id: number, approved: boolean) => Promise<void>
+  onDeleteRsvp: (id: number) => Promise<void> // Add onDeleteRsvp prop
+  onToggleRsvpConfirmation: (id: number, isConfirmed: boolean) => Promise<void> // Add onToggleRsvpConfirmation prop
   onUpdateSetting: (key: string, value: string) => Promise<void>
   onSettingsChange: (key: string, value: string) => void
   onCreateAdminUser: (values: CreateAdminUserFormInputs) => Promise<void>
@@ -34,17 +38,20 @@ interface AdminDashboardLayoutProps {
 export function AdminDashboardLayout({
   profile,
   messages,
+  rsvps, // Destructure rsvps
   settings,
   loadingData,
   onLogout,
   onDeleteMessage,
   onToggleMessageApproval,
+  onDeleteRsvp, // Destructure onDeleteRsvp
+  onToggleRsvpConfirmation, // Destructure onToggleRsvpConfirmation
   onUpdateSetting,
   onSettingsChange,
   onCreateAdminUser,
   isCreatingAdmin,
 }: AdminDashboardLayoutProps) {
-  const [activeTab, setActiveTab] = useState<"messages" | "settings" | "manage-admins">("messages")
+  const [activeTab, setActiveTab] = useState<"messages" | "rsvps" | "settings" | "manage-admins">("messages") // Add 'rsvps' to activeTab
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-amber-50 p-4">
@@ -71,6 +78,14 @@ export function AdminDashboardLayout({
             Mensagens
           </Button>
           <Button
+            variant={activeTab === "rsvps" ? "default" : "outline"} // New RSVP tab button
+            onClick={() => setActiveTab("rsvps")}
+            className="flex items-center gap-2"
+          >
+            <Users className="w-4 h-4" />
+            Confirmações
+          </Button>
+          <Button
             variant={activeTab === "settings" ? "default" : "outline"}
             onClick={() => setActiveTab("settings")}
             className="flex items-center gap-2"
@@ -95,6 +110,14 @@ export function AdminDashboardLayout({
             loading={loadingData}
             onDeleteMessage={onDeleteMessage}
             onToggleMessageApproval={onToggleMessageApproval}
+          />
+        )}
+        {activeTab === "rsvps" && ( // Render the new RSVP tab
+          <AdminRsvpTab
+            rsvps={rsvps}
+            loading={loadingData}
+            onDeleteRsvp={onDeleteRsvp}
+            onToggleRsvpConfirmation={onToggleRsvpConfirmation}
           />
         )}
         {activeTab === "settings" && (

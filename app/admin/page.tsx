@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { supabase, type Message as MessageType, type Profile } from "@/src/integrations/supabase/client"
+import { supabase, type Message as MessageType, type Profile, type RSVP as RSVPType } from "@/src/integrations/supabase/client"
 import { toast } from "sonner"
 import { AdminLoadingSpinner } from "@/components/admin/admin-loading-spinner"
 import { AdminDashboardLayout } from "@/components/admin/admin-dashboard-layout"
@@ -23,6 +23,7 @@ export default function AdminPage() {
   const [isCreatingAdmin, setIsCreatingAdmin] = useState(false)
 
   const [messages, setMessages] = useState<MessageType[]>([])
+  const [rsvps, setRsvps] = useState<RSVPType[]>([]) // New state for RSVPs
   const [settings, setSettings] = useState<Record<string, string>>({})
 
   useEffect(() => {
@@ -100,6 +101,7 @@ export default function AdminPage() {
   const loadDashboardData = async () => {
     setLoadingData(true)
 
+    // Fetch Messages
     const { data: messagesData, error: messagesError } = await supabase.from("messages").select("*").order("created_at", { ascending: false })
     if (messagesError) {
       console.error("Error fetching messages:", messagesError)
@@ -108,6 +110,16 @@ export default function AdminPage() {
       setMessages(messagesData || [])
     }
 
+    // Fetch RSVPs
+    const { data: rsvpsData, error: rsvpsError } = await supabase.from("rsvp").select("*").order("created_at", { ascending: false })
+    if (rsvpsError) {
+      console.error("Error fetching RSVPs:", rsvpsError)
+      toast.error("Erro ao carregar confirmações de presença.")
+    } else {
+      setRsvps(rsvpsData || [])
+    }
+
+    // Fetch Settings
     const { data: settingsData, error: settingsError } = await supabase.from("event_settings").select("*")
     if (settingsError) {
       console.error("Error fetching settings:", settingsError)
@@ -149,6 +161,32 @@ export default function AdminPage() {
     } else {
       console.error("Error toggling message approval:", error)
       toast.error("Erro ao atualizar aprovação da mensagem.")
+    }
+  }
+
+  const deleteRsvp = async (id: number) => {
+    if (confirm("Tem certeza que deseja remover esta confirmação de presença?")) {
+      const { error } = await supabase.from("rsvp").delete().eq("id", id)
+
+      if (!error) {
+        setRsvps(rsvps.filter((r) => r.id !== id))
+        toast.success("Confirmação de presença removida com sucesso!")
+      } else {
+        console.error("Error deleting RSVP:", error)
+        toast.error("Erro ao remover confirmação de presença.")
+      }
+    }
+  }
+
+  const toggleRsvpConfirmation = async (id: number, isConfirmed: boolean) => {
+    const { error } = await supabase.from("rsvp").update({ is_confirmed: !isConfirmed }).eq("id", id)
+
+    if (!error) {
+      setRsvps(rsvps.map((r) => (r.id === id ? { ...r, is_confirmed: !isConfirmed } : r)))
+      toast.success(`Confirmação de presença ${!isConfirmed ? "marcada como confirmada" : "desmarcada como confirmada"}!`)
+    } else {
+      console.error("Error toggling RSVP confirmation:", error)
+      toast.error("Erro ao atualizar confirmação de presença.")
     }
   }
 
@@ -209,11 +247,14 @@ export default function AdminPage() {
     <AdminDashboardLayout
       profile={profile}
       messages={messages}
+      rsvps={rsvps} // Pass rsvps to layout
       settings={settings}
       loadingData={loadingData}
       onLogout={handleLogout}
       onDeleteMessage={deleteMessage}
       onToggleMessageApproval={toggleMessageApproval}
+      onDeleteRsvp={deleteRsvp} // Pass deleteRsvp to layout
+      onToggleRsvpConfirmation={toggleRsvpConfirmation} // Pass toggleRsvpConfirmation to layout
       onUpdateSetting={updateSetting}
       onSettingsChange={handleSettingsChange}
       onCreateAdminUser={handleCreateAdminUser}

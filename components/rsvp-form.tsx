@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,13 +10,11 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Users, Check, Loader2 } from "lucide-react"
 import { supabase } from "@/lib/supabase/client"
-import { toast } from "sonner" // Import Sonner for notifications
+import { toast } from "sonner"
 
 export function RSVPForm() {
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
-    phone: "",
     will_attend: "",
     number_of_guests: 1,
     dietary_restrictions: "",
@@ -27,7 +24,7 @@ export function RSVPForm() {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [error, setError] = useState("")
 
-  const handleInputChange = (field: string, value: string | number | boolean) => {
+  const handleInputChange = (field: string, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
     setError("")
   }
@@ -36,7 +33,7 @@ export function RSVPForm() {
     e.preventDefault()
 
     if (!formData.name.trim() || !formData.will_attend) {
-      setError("Por favor, preencha os campos obrigatórios.")
+      setError("Por favor, preencha seu nome e confirme sua presença.")
       toast.error("Por favor, preencha os campos obrigatórios.")
       return
     }
@@ -48,13 +45,11 @@ export function RSVPForm() {
       const { error } = await supabase.from("rsvp").insert([
         {
           name: formData.name.trim(),
-          email: formData.email.trim() || null,
-          phone: formData.phone.trim() || null,
           will_attend: formData.will_attend === "yes",
-          // Se não for comparecer, number_of_guests deve ser null, não 0, para campos opcionais.
           number_of_guests: formData.will_attend === "yes" ? formData.number_of_guests : null,
           dietary_restrictions: formData.dietary_restrictions.trim() || null,
           message: formData.message.trim() || null,
+          is_confirmed: false, // Default para false, admin irá confirmar
         },
       ])
 
@@ -109,7 +104,7 @@ export function RSVPForm() {
 
           <div className="space-y-2">
             <Label htmlFor="name" className="text-[#2d5a3d] font-medium">
-              Nome completo *
+              Seu nome completo *
             </Label>
             <Input
               id="name"
@@ -119,34 +114,6 @@ export function RSVPForm() {
               placeholder="Seu nome completo"
               required
             />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-[#2d5a3d] font-medium">
-                E-mail
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
-                className="border-[#3CB371]/30 focus:border-[#3CB371] focus:ring-[#3CB371]"
-                placeholder="seu@email.com"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="phone" className="text-[#2d5a3d] font-medium">
-                Telefone
-              </Label>
-              <Input
-                id="phone"
-                value={formData.phone}
-                onChange={(e) => handleInputChange("phone", e.target.value)}
-                className="border-[#3CB371]/30 focus:border-[#3CB371] focus:ring-[#3CB371]"
-                placeholder="(11) 99999-9999"
-              />
-            </div>
           </div>
 
           <div className="space-y-3">
@@ -191,7 +158,7 @@ export function RSVPForm() {
           {formData.will_attend === "yes" && (
             <div className="space-y-2">
               <Label htmlFor="dietary" className="text-[#2d5a3d] font-medium">
-                Restrições alimentares
+                Restrições alimentares (opcional)
               </Label>
               <Input
                 id="dietary"
@@ -205,7 +172,7 @@ export function RSVPForm() {
 
           <div className="space-y-2">
             <Label htmlFor="message" className="text-[#2d5a3d] font-medium">
-              Mensagem para a família
+              Mensagem para a família (opcional)
             </Label>
             <Textarea
               id="message"

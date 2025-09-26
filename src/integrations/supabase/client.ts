@@ -30,12 +30,11 @@ export type Message = {
 export type RSVP = {
   id: number
   name: string
-  email: string | null
-  phone: string | null
   will_attend: boolean
-  number_of_guests: number | null // Alterado para permitir null
+  number_of_guests: number | null
   dietary_restrictions: string | null
   message: string | null
+  is_confirmed: boolean // Novo campo para controle do admin
   created_at: string
   updated_at: string
 }
@@ -44,5 +43,5 @@ export type Profile = {
   id: string;
   first_name: string | null;
   last_name: string | null;
-  is_admin: boolean; // Adicionado is_admin
+  is_admin: boolean;
 };
