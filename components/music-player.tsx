@@ -9,7 +9,8 @@ export function MusicPlayer() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [hasError, setHasError] = useState(false)
+  const [isAudioUnavailable, setIsAudioUnavailable] = useState(false) // Para erros reais do arquivo de áudio
+  const [isAutoplayBlocked, setIsAutoplayBlocked] = useState(false) // Para bloqueio de autoplay do navegador
   const audioRef = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
@@ -20,12 +21,13 @@ export function MusicPlayer() {
 
       const handleCanPlay = () => {
         setIsLoading(false)
-        setHasError(false)
+        setIsAudioUnavailable(false)
+        setIsAutoplayBlocked(false) // Resetar se puder tocar
       }
 
       const handleError = () => {
         setIsLoading(false)
-        setHasError(true)
+        setIsAudioUnavailable(true) // Este é um erro real de carregamento
         setIsPlaying(false)
         toast.error("Erro ao carregar a música. Verifique o arquivo de áudio.")
         console.error("[MusicPlayer] Audio failed to load or play.")
@@ -33,6 +35,8 @@ export function MusicPlayer() {
 
       const handleLoadStart = () => {
         setIsLoading(true)
+        setIsAudioUnavailable(false) // Resetar erros em nova tentativa de carregamento
+        setIsAutoplayBlocked(false)
       }
 
       audio.addEventListener("canplay", handleCanPlay)
@@ -48,36 +52,40 @@ export function MusicPlayer() {
   }, [])
 
   const togglePlay = async () => {
-    if (audioRef.current && !hasError) {
+    if (!audioRef.current) return;
+
+    if (isPlaying) {
+      audioRef.current.pause()
+      setIsPlaying(false)
+      toast.info("Música pausada.")
+    } else {
+      // Se o áudio estiver indisponível devido a um erro de carregamento, não tente tocar
+      if (isAudioUnavailable) {
+        toast.error("A música não está disponível devido a um erro de carregamento.");
+        return;
+      }
+
+      setIsLoading(true)
       try {
-        if (isPlaying) {
-          audioRef.current.pause()
-          setIsPlaying(false)
-          toast.info("Música pausada.")
-        } else {
-          setIsLoading(true)
-          await audioRef.current.play()
-          setIsPlaying(true)
-          setIsLoading(false)
-          toast.success("Música tocando!")
-          console.log("[MusicPlayer] Music started playing")
-        }
+        await audioRef.current.play()
+        setIsPlaying(true)
+        setIsLoading(false)
+        setIsAutoplayBlocked(false) // Tocou com sucesso, então o autoplay não está mais bloqueado
+        toast.success("Música tocando!")
+        console.log("[MusicPlayer] Music started playing")
       } catch (error) {
         console.error("[MusicPlayer] Autoplay prevented or audio error:", error)
         setIsLoading(false)
-        setIsPlaying(false) // Garante que isPlaying seja falso se a reprodução falhar
+        setIsPlaying(false)
         
-        // Verifica se o erro é devido à política de reprodução automática do navegador
         if ((error as DOMException)?.name === "NotAllowedError") {
-          setHasError(true); // Marca como erro para desabilitar o botão
+          setIsAutoplayBlocked(true); // Autoplay foi bloqueado, mas o botão deve continuar clicável para reprodução manual
           toast.error("O navegador bloqueou a reprodução automática. Por favor, clique no botão para tocar a música.");
         } else {
-          setHasError(true); // Marca como erro para outros problemas de áudio
+          setIsAudioUnavailable(true); // Outros erros são erros reais de carregamento/reprodução
           toast.error("Erro ao iniciar a música. Verifique o arquivo de áudio.");
         }
       }
-    } else if (hasError) {
-      toast.error("A música não está disponível para tocar devido a um erro anterior.");
     }
   }
 
@@ -93,7 +101,9 @@ export function MusicPlayer() {
     <div className="fixed top-4 right-4 z-50 flex gap-2">
       <Button
         onClick={togglePlay}
-        disabled={isLoading || hasError}
+        // O botão deve ser desabilitado apenas se estiver carregando ou se houver um erro *de carregamento*.
+        // Se o autoplay estiver bloqueado, o usuário ainda deve poder clicar nele.
+        disabled={isLoading || isAudioUnavailable}
         className="bg-[#3CB371] hover:bg-[#2d5a3d] text-white rounded-full w-12 h-12 shadow-lg disabled:opacity-50"
         size="sm"
       >
@@ -107,7 +117,7 @@ export function MusicPlayer() {
       </Button>
       <Button
         onClick={toggleMute}
-        disabled={hasError}
+        disabled={isAudioUnavailable} // O botão de mudo também deve ser desabilitado se houver um erro de carregamento
         className="bg-[#3CB371] hover:bg-[#2d5a3d] text-white rounded-full w-12 h-12 shadow-lg disabled:opacity-50"
         size="sm"
       >
@@ -116,9 +126,9 @@ export function MusicPlayer() {
       <audio ref={audioRef} preload="metadata" onEnded={() => setIsPlaying(false)} loop={false}>
         <source src="/pvc.mp3" type="audio/mpeg" />
       </audio>
-      {hasError && (
+      {(isAudioUnavailable || isAutoplayBlocked) && ( // Mostrar mensagem de erro para ambos os tipos de erros
         <div className="absolute top-14 right-0 bg-red-100 text-red-800 text-xs px-2 py-1 rounded shadow-lg">
-          Áudio indisponível
+          {isAudioUnavailable ? "Áudio indisponível" : "Reprodução automática bloqueada"}
         </div>
       )}
     </div>
