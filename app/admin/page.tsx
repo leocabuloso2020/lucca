@@ -29,55 +29,60 @@ export default function AdminPage() {
   const [settings, setSettings] = useState<Record<string, string>>({})
 
   useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setSession(session)
-      if (session) {
-        await fetchProfile(session.user.id)
-      } else {
-        setProfile(null)
-        setLoadingAuth(false)
-      }
-    })
+    let isMounted = true; // Flag para evitar atualizações de estado em componentes desmontados
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      if (session) {
-        fetchProfile(session.user.id)
+    const handleAuthSession = async (currentSession: any) => {
+      if (!isMounted) return;
+
+      setSession(currentSession);
+      if (currentSession) {
+        // Buscar perfil apenas se houver uma sessão
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", currentSession.user.id)
+          .single();
+
+        if (!isMounted) return; // Verificar novamente após a chamada assíncrona
+
+        if (error) {
+          console.error("Error fetching profile:", error);
+          toast.error("Erro ao carregar perfil do usuário.");
+          setProfile(null);
+          await supabase.auth.signOut(); // Deslogar se a busca do perfil falhar
+        } else {
+          setProfile(data as Profile);
+        }
       } else {
-        setLoadingAuth(false)
+        setProfile(null);
       }
-    })
+      setLoadingAuth(false); // Sempre definir como false após a verificação inicial de autenticação e tentativa de busca de perfil
+    };
+
+    // Verificação inicial da sessão
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      handleAuthSession(session);
+    });
+
+    // Ouvir mudanças no estado de autenticação
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, currentSession) => {
+      // Reagir apenas a mudanças reais, não ao carregamento inicial se já foi tratado por getSession
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
+        handleAuthSession(currentSession);
+      }
+    });
 
     return () => {
-      authListener.subscription.unsubscribe()
-    }
-  }, [])
+      isMounted = false; // Limpeza
+      authListener.subscription.unsubscribe();
+    };
+  }, []); // Array de dependências vazio significa que ele é executado apenas uma vez na montagem
 
   useEffect(() => {
     if (profile?.is_admin) {
       loadDashboardData()
     }
   }, [profile])
-
-  const fetchProfile = async (userId: string) => {
-    setLoadingAuth(true)
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .single()
-
-    if (error) {
-      console.error("Error fetching profile:", error)
-      toast.error("Erro ao carregar perfil do usuário.")
-      setProfile(null)
-      setLoadingAuth(false)
-      await supabase.auth.signOut()
-    } else {
-      setProfile(data as Profile)
-      setLoadingAuth(false)
-    }
-  }
 
   const handleLogin = async (values: AdminLoginFormInputs) => {
     setIsSubmittingLogin(true)
