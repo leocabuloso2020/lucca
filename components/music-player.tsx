@@ -99,8 +99,11 @@ export function MusicPlayer() {
 
   return (
     <div className="fixed top-0 left-0 w-full bg-[#3CB371] text-white p-2 z-50 flex items-center justify-between shadow-lg">
-      <div className="flex items-center gap-2">
-        <span className="text-sm md:text-base font-medium">Ouça a trilha do Lucca - Aperte o play</span>
+      {/* Empty div to push the text to center */}
+      <div className="flex-1 hidden md:block"></div> 
+      
+      <div className="flex-1 flex items-center justify-center">
+        <span className="text-sm md:text-base font-light">Ouça a trilha do Lucca - Aperte o play</span>
       </div>
       <div className="flex gap-2">
         <Button
