@@ -98,36 +98,39 @@ export function MusicPlayer() {
   }
 
   return (
-    <div className="fixed top-4 right-4 z-50 flex gap-2">
-      <Button
-        onClick={togglePlay}
-        // O botão deve ser desabilitado apenas se estiver carregando ou se houver um erro *de carregamento*.
-        // Se o autoplay estiver bloqueado, o usuário ainda deve poder clicar nele.
-        disabled={isLoading || isAudioUnavailable}
-        className="bg-[#3CB371] hover:bg-[#2d5a3d] text-white rounded-full w-12 h-12 shadow-lg disabled:opacity-50"
-        size="sm"
-      >
-        {isLoading ? (
-          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-        ) : isPlaying ? (
-          <Pause size={20} />
-        ) : (
-          <Play size={20} />
-        )}
-      </Button>
-      <Button
-        onClick={toggleMute}
-        disabled={isAudioUnavailable} // O botão de mudo também deve ser desabilitado se houver um erro de carregamento
-        className="bg-[#3CB371] hover:bg-[#2d5a3d] text-white rounded-full w-12 h-12 shadow-lg disabled:opacity-50"
-        size="sm"
-      >
-        {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-      </Button>
+    <div className="fixed top-0 left-0 w-full bg-[#3CB371] text-white p-2 z-50 flex items-center justify-between shadow-lg">
+      <div className="flex items-center gap-2">
+        <span className="text-sm md:text-base font-medium">Ouça a trilha do Lucca - Aperte o play</span>
+      </div>
+      <div className="flex gap-2">
+        <Button
+          onClick={togglePlay}
+          disabled={isLoading || isAudioUnavailable}
+          className="bg-white text-[#3CB371] hover:bg-gray-100 rounded-full w-8 h-8 p-0 flex items-center justify-center shadow-md disabled:opacity-50"
+          size="sm"
+        >
+          {isLoading ? (
+            <div className="w-4 h-4 border-2 border-[#3CB371] border-t-transparent rounded-full animate-spin" />
+          ) : isPlaying ? (
+            <Pause size={16} />
+          ) : (
+            <Play size={16} />
+          )}
+        </Button>
+        <Button
+          onClick={toggleMute}
+          disabled={isAudioUnavailable}
+          className="bg-white text-[#3CB371] hover:bg-gray-100 rounded-full w-8 h-8 p-0 flex items-center justify-center shadow-md disabled:opacity-50"
+          size="sm"
+        >
+          {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+        </Button>
+      </div>
       <audio ref={audioRef} preload="metadata" onEnded={() => setIsPlaying(false)} loop={false}>
         <source src="/pvc.mp3" type="audio/mpeg" />
       </audio>
-      {(isAudioUnavailable || isAutoplayBlocked) && ( // Mostrar mensagem de erro para ambos os tipos de erros
-        <div className="absolute top-14 right-0 bg-red-100 text-red-800 text-xs px-2 py-1 rounded shadow-lg">
+      {(isAudioUnavailable || isAutoplayBlocked) && (
+        <div className="absolute bottom-[-25px] left-1/2 -translate-x-1/2 bg-red-100 text-red-800 text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap">
           {isAudioUnavailable ? "Áudio indisponível" : "Reprodução automática bloqueada"}
         </div>
       )}
