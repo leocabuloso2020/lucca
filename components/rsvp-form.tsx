@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react" // Import useEffect
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -23,6 +23,11 @@ export function RSVPForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [error, setError] = useState("")
+
+  useEffect(() => {
+    // Log para verificar a instância do Supabase
+    console.log("[RSVPForm] Supabase client instance:", supabase);
+  }, []);
 
   const handleInputChange = (field: string, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -63,7 +68,7 @@ export function RSVPForm() {
     } catch (error: any) {
       console.error("Error submitting RSVP:", error)
       const errorMessage = error.message || "Erro desconhecido ao enviar confirmação."
-      setError(`Erro ao enviar confirmação: ${errorMessage}. Tente novamente.`)
+      setError(`Erro ao enviar confirmação: ${errorMessage}. Por favor, tente novamente ou entre em contato com o suporte se o problema persistir.`)
       toast.error(`Erro: ${errorMessage}`)
     } finally {
       setIsSubmitting(false)
