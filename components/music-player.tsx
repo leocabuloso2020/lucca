@@ -17,6 +17,7 @@ export function MusicPlayer() {
   const audioRef = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
+    console.log("[MusicPlayer] Initializing with MUSIC_URL:", MUSIC_URL); // Adicionado para depuração
     if (audioRef.current) {
       audioRef.current.volume = 0.3
       audioRef.current.loop = false; // Explicitamente garantindo que não haja loop
