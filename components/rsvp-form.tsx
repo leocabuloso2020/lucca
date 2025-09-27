@@ -63,7 +63,7 @@ export function RSVPForm() {
     const toastId = toast.loading("Enviando sua confirmação...")
 
     try {
-      const { error } = await supabase.from("rsvp").insert([
+      const { error } = await supabase.from("guest_confirmations").insert([
         {
           name: data.name.trim(),
           will_attend: data.will_attend === "yes",

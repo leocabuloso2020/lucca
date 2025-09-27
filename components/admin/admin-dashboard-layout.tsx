@@ -3,13 +3,12 @@
 import type React from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { LogOut, MessageSquare, Settings, UserPlus, Users } from "lucide-react" // Import Users icon
+import { LogOut, MessageSquare, Settings, UserPlus, Users } from "lucide-react"
 import { AdminMessagesTab } from "./admin-messages-tab"
 import { AdminSettingsTab } from "./admin-settings-tab"
 import { AdminManageAdminsTab } from "./admin-manage-admins-tab"
-import { AdminRsvpTab } from "./admin-rsvp-tab" // Import the new RSVP tab
-import { type Message as MessageType, type Profile, type RSVP as RSVPType } from "@/src/integrations/supabase/client"
-import { type AdminLoginFormInputs } from "./admin-auth-form"
+import { AdminConfirmationsTab } from "./admin-confirmations-tab"
+import { type Message as MessageType, type Profile, type GuestConfirmation as ConfirmationType } from "@/src/integrations/supabase/client"
 import { type CreateAdminUserFormInputs } from "./admin-manage-admins-tab"
 
 interface EventSetting {
@@ -21,14 +20,14 @@ interface EventSetting {
 interface AdminDashboardLayoutProps {
   profile: Profile | null
   messages: MessageType[]
-  rsvps: RSVPType[] // Add rsvps prop
+  confirmations: ConfirmationType[]
   settings: Record<string, string>
   loadingData: boolean
   onLogout: () => Promise<void>
   onDeleteMessage: (id: number) => Promise<void>
   onToggleMessageApproval: (id: number, approved: boolean) => Promise<void>
-  onDeleteRsvp: (id: number) => Promise<void> // Add onDeleteRsvp prop
-  onToggleRsvpConfirmation: (id: number, isConfirmed: boolean) => Promise<void> // Add onToggleRsvpConfirmation prop
+  onDeleteConfirmation: (id: number) => Promise<void>
+  onToggleConfirmation: (id: number, isConfirmed: boolean) => Promise<void>
   onUpdateSetting: (key: string, value: string) => Promise<void>
   onSettingsChange: (key: string, value: string) => void
   onCreateAdminUser: (values: CreateAdminUserFormInputs) => Promise<void>
@@ -38,20 +37,20 @@ interface AdminDashboardLayoutProps {
 export function AdminDashboardLayout({
   profile,
   messages,
-  rsvps, // Destructure rsvps
+  confirmations,
   settings,
   loadingData,
   onLogout,
   onDeleteMessage,
   onToggleMessageApproval,
-  onDeleteRsvp, // Destructure onDeleteRsvp
-  onToggleRsvpConfirmation, // Destructure onToggleRsvpConfirmation
+  onDeleteConfirmation,
+  onToggleConfirmation,
   onUpdateSetting,
   onSettingsChange,
   onCreateAdminUser,
   isCreatingAdmin,
 }: AdminDashboardLayoutProps) {
-  const [activeTab, setActiveTab] = useState<"messages" | "rsvps" | "settings" | "manage-admins">("messages") // Add 'rsvps' to activeTab
+  const [activeTab, setActiveTab] = useState<"messages" | "confirmations" | "settings" | "manage-admins">("messages")
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-amber-50 p-4">
@@ -78,8 +77,8 @@ export function AdminDashboardLayout({
             Mensagens
           </Button>
           <Button
-            variant={activeTab === "rsvps" ? "default" : "outline"} // New RSVP tab button
-            onClick={() => setActiveTab("rsvps")}
+            variant={activeTab === "confirmations" ? "default" : "outline"}
+            onClick={() => setActiveTab("confirmations")}
             className="flex items-center gap-2"
           >
             <Users className="w-4 h-4" />
@@ -112,12 +111,12 @@ export function AdminDashboardLayout({
             onToggleMessageApproval={onToggleMessageApproval}
           />
         )}
-        {activeTab === "rsvps" && ( // Render the new RSVP tab
-          <AdminRsvpTab
-            rsvps={rsvps}
+        {activeTab === "confirmations" && (
+          <AdminConfirmationsTab
+            confirmations={confirmations}
             loading={loadingData}
-            onDeleteRsvp={onDeleteRsvp}
-            onToggleRsvpConfirmation={onToggleRsvpConfirmation}
+            onDeleteConfirmation={onDeleteConfirmation}
+            onToggleConfirmation={onToggleConfirmation}
           />
         )}
         {activeTab === "settings" && (
