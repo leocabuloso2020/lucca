@@ -158,32 +158,6 @@ export default function BabyShowerPage() {
         <MessagesWall />
       </section>
 
-      <section
-        id="location"
-        className="flex items-center justify-center px-4 py-16 bg-white/50 relative z-10"
-      >
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl md:text-6xl font-serif text-[#3CB371] mb-8">Como Chegar</h2>
-          <Card className="bg-white border-[#3CB371]/30 shadow-xl">
-            <CardContent className="p-8">
-              <div className="flex items-center justify-center gap-2 mb-6">
-                <MapPin className="text-[#3CB371]" size={32} />
-                <div className="text-left">
-                  <h3 className="font-serif text-2xl text-[#2d5a3d] mb-2">
-                    {eventSettings.event_title || "Chá de Bebê do Lucca"}
-                  </h3>
-                  <p className="text-[#2d5a3d]">{eventSettings.event_address || "Rua das Flores, 123 - Jardim Primavera"}</p>
-                  <p className="text-[#2d5a3d]">São Paulo - SP, CEP: 01234-567</p> {/* Keep as placeholder or add more settings */}
-                </div>
-              </div>
-              <div className="bg-[#f0f8f0] rounded-lg p-6 mt-6">
-                <p className="text-[#2d5a3d]">Mapa interativo será implementado na próxima etapa</p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
       <section id="closing" className="flex items-center justify-center px-4 py-16 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl md:text-6xl font-serif text-[#3CB371] mb-8">Até Breve!</h2>
