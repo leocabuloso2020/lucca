@@ -48,14 +48,14 @@ export function MusicPlayer() {
         setIsAudioUnavailable(false); // Resetar erros em nova tentativa de carregamento
         setIsAutoplayBlocked(false);
 
-        // Define um timeout para o carregamento (ex: 10 segundos)
+        // Define um timeout para o carregamento (ex: 30 segundos)
         loadingTimeout = setTimeout(() => {
           console.warn("[MusicPlayer] Audio loading timed out. Assuming audio is unavailable.");
           setIsLoading(false);
           setIsAudioUnavailable(true);
           setIsPlaying(false);
           toast.error("A música demorou muito para carregar ou está indisponível.");
-        }, 10000); // 10 segundos
+        }, 30000); // Aumentado para 30 segundos
       };
 
       const handleEnded = () => {
@@ -157,7 +157,7 @@ export function MusicPlayer() {
           {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
         </Button>
       </div>
-      <audio ref={audioRef} preload="none"> {/* Changed preload to 'none' for efficiency */}
+      <audio ref={audioRef} preload="metadata"> {/* Alterado para 'metadata' */}
         <source src={MUSIC_URL} type="audio/mpeg" />
       </audio>
       {(isAudioUnavailable || isAutoplayBlocked) && (
