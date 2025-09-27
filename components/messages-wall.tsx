@@ -141,7 +141,7 @@ export function MessagesWall() {
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-8">
         <h2 className="text-5xl md:text-6xl font-serif text-[#3CB371] mb-4">Mural de Mensagens</h2>
-        <p className="text-xl text-[#2d5a3d] mb-6">Deixe uma mensagem carinhosa para o Lucca e sua família</p>
+        <p className="text-lg text-[#2d5a3d] mb-6">Deixe uma mensagem carinhosa para o Lucca e sua família</p>
 
         <Button
           onClick={() => setShowForm(!showForm)}

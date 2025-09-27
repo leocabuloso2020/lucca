@@ -104,7 +104,7 @@ export default function BabyShowerPage() {
             </div>
           </div>
 
-          <p className="text-xl md:text-2xl text-[#2d5a3d] mb-8 font-light leading-relaxed">
+          <p className="text-xl text-[#2d5a3d] mb-8 font-light leading-relaxed">
             Venha celebrar conosco este momento especial e dar as boas-vindas ao nosso pequeno príncipe
           </p>
 
@@ -141,7 +141,7 @@ export default function BabyShowerPage() {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl md:text-6xl font-serif text-[#3CB371] mb-8">Até Breve!</h2>
           <div className="bg-gradient-to-br from-white to-[#f0f8f0] rounded-2xl p-8 md:p-12 shadow-xl border border-[#3CB371]/30">
-            <div className="text-xl md:text-2xl text-[#2d5a3d] leading-relaxed space-y-6">
+            <div className="text-lg text-[#2d5a3d] leading-relaxed space-y-6">
               <p>Mal podemos esperar para compartilhar este momento especial com você!</p>
               <p>O Lucca já está ansioso para conhecer todos que o amam.</p>
               <div className="flex items-center justify-center gap-4 text-[#DAA520] text-3xl mt-8">
