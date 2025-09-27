@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { supabase, type Message as MessageType, type Profile, type GuestConfirmation as ConfirmationType } from "@/src/integrations/supabase/client"
+import { supabase, type Message as MessageType, type Profile } from "@/src/integrations/supabase/client"
 import { toast } from "sonner"
 import { AdminLoadingSpinner } from "@/components/admin/admin-loading-spinner"
 import { AdminDashboardLayout } from "@/components/admin/admin-dashboard-layout"
@@ -23,7 +23,6 @@ export default function AdminPage() {
   const [isCreatingAdmin, setIsCreatingAdmin] = useState(false)
 
   const [messages, setMessages] = useState<MessageType[]>([])
-  const [confirmations, setConfirmations] = useState<ConfirmationType[]>([])
   const [settings, setSettings] = useState<Record<string, string>>({})
 
   useEffect(() => {
@@ -110,15 +109,6 @@ export default function AdminPage() {
       setMessages(messagesData || [])
     }
 
-    // Fetch Confirmations
-    const { data: confirmationsData, error: confirmationsError } = await supabase.from("guest_confirmations").select("*").order("created_at", { ascending: false })
-    if (confirmationsError) {
-      console.error("Error fetching confirmations:", confirmationsError)
-      toast.error("Erro ao carregar confirmações de presença.")
-    } else {
-      setConfirmations(confirmationsData || [])
-    }
-
     // Fetch Settings
     const { data: settingsData, error: settingsError } = await supabase.from("event_settings").select("*")
     if (settingsError) {
@@ -161,32 +151,6 @@ export default function AdminPage() {
     } else {
       console.error("Error toggling message approval:", error)
       toast.error("Erro ao atualizar aprovação da mensagem.")
-    }
-  }
-
-  const deleteConfirmation = async (id: number) => {
-    if (confirm("Tem certeza que deseja remover esta confirmação de presença?")) {
-      const { error } = await supabase.from("guest_confirmations").delete().eq("id", id)
-
-      if (!error) {
-        setConfirmations(confirmations.filter((r) => r.id !== id))
-        toast.success("Confirmação de presença removida com sucesso!")
-      } else {
-        console.error("Error deleting confirmation:", error)
-        toast.error("Erro ao remover confirmação de presença.")
-      }
-    }
-  }
-
-  const toggleConfirmation = async (id: number, isConfirmed: boolean) => {
-    const { error } = await supabase.from("guest_confirmations").update({ is_confirmed: !isConfirmed }).eq("id", id)
-
-    if (!error) {
-      setConfirmations(confirmations.map((r) => (r.id === id ? { ...r, is_confirmed: !isConfirmed } : r)))
-      toast.success(`Confirmação de presença ${!isConfirmed ? "marcada como confirmada" : "desmarcada como confirmada"}!`)
-    } else {
-      console.error("Error toggling confirmation:", error)
-      toast.error("Erro ao atualizar confirmação de presença.")
     }
   }
 
@@ -247,14 +211,11 @@ export default function AdminPage() {
     <AdminDashboardLayout
       profile={profile}
       messages={messages}
-      confirmations={confirmations}
       settings={settings}
       loadingData={loadingData}
       onLogout={handleLogout}
       onDeleteMessage={deleteMessage}
       onToggleMessageApproval={toggleMessageApproval}
-      onDeleteConfirmation={deleteConfirmation}
-      onToggleConfirmation={toggleConfirmation}
       onUpdateSetting={updateSetting}
       onSettingsChange={handleSettingsChange}
       onCreateAdminUser={handleCreateAdminUser}

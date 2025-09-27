@@ -27,18 +27,6 @@ export type Message = {
   created_at: string
 }
 
-export type GuestConfirmation = {
-  id: number
-  name: string
-  will_attend: boolean
-  number_of_guests: number | null
-  dietary_restrictions: string | null
-  message: string | null
-  is_confirmed: boolean
-  created_at: string
-  updated_at: string
-}
-
 export type Profile = {
   id: string;
   first_name: string | null;

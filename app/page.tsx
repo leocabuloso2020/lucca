@@ -7,7 +7,6 @@ import { supabase } from "@/lib/supabase/client"
 import { FloatingElements } from "@/components/floating-elements"
 import { MusicPlayer } from "@/components/music-player"
 import { CountdownTimer } from "@/components/countdown-timer"
-import { RSVPForm } from "@/components/rsvp-form"
 import { MessagesWall } from "@/components/messages-wall"
 
 interface EventSetting {
@@ -148,10 +147,6 @@ export default function BabyShowerPage() {
             </CardContent>
           </Card>
         </div>
-      </section>
-
-      <section id="rsvp" className="flex items-center justify-center px-4 py-16 bg-white/50 relative z-10">
-        <RSVPForm />
       </section>
 
       <section id="messages" className="flex items-center justify-center px-4 py-16 relative z-10">
