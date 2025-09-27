@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button"
 import { Volume2, VolumeX, Play, Pause } from "lucide-react"
 import { toast } from "sonner" // Import Sonner for notifications
 
+// Use uma variável de ambiente para a URL da música
+const MUSIC_URL = process.env.NEXT_PUBLIC_MUSIC_URL || "/pvc.mp3"; // Fallback para o caminho local se a variável não estiver definida
+
 export function MusicPlayer() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
@@ -153,8 +156,8 @@ export function MusicPlayer() {
           {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
         </Button>
       </div>
-      <audio ref={audioRef} preload="metadata">
-        <source src="/pvc.mp3" type="audio/mpeg" />
+      <audio ref={audioRef} preload="none"> {/* Changed preload to 'none' for efficiency */}
+        <source src={MUSIC_URL} type="audio/mpeg" />
       </audio>
       {(isAudioUnavailable || isAutoplayBlocked) && (
         <div className="absolute bottom-[-25px] left-1/2 -translate-x-1/2 bg-red-100 text-red-800 text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap">
