@@ -1,13 +1,15 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import dynamic from "next/dynamic" // Importar dynamic
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { supabase } from "@/src/integrations/supabase/client"
 import { toast } from "sonner"
 import { Loader2, PartyPopper, Check } from "lucide-react"
-import Confetti from "react-confetti"
+// Importar Confetti dinamicamente para garantir que seja carregado apenas no cliente
+const Confetti = dynamic(() => import("react-confetti"), { ssr: false });
 
 export function SimpleRsvpForm() {
   const [name, setName] = useState("")
@@ -50,13 +52,16 @@ export function SimpleRsvpForm() {
   if (isSubmitted) {
     return (
       <div className="text-center max-w-md mx-auto">
-        <Confetti
-          width={windowSize.width}
-          height={windowSize.height}
-          recycle={false}
-          numberOfPieces={300}
-          gravity={0.1}
-        />
+        {/* Renderizar Confetti apenas se windowSize.width for maior que 0 */}
+        {windowSize.width > 0 && (
+          <Confetti
+            width={windowSize.width}
+            height={windowSize.height}
+            recycle={false}
+            numberOfPieces={300}
+            gravity={0.1}
+          />
+        )}
         <div className="bg-green-100 rounded-full p-4 inline-block mb-4">
           <PartyPopper className="text-green-600" size={48} />
         </div>
