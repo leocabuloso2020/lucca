@@ -27,6 +27,12 @@ export type Message = {
   created_at: string
 }
 
+export type Confirmation = {
+  id: number
+  name: string
+  created_at: string
+}
+
 export type Profile = {
   id: string;
   first_name: string | null;

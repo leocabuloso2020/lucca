@@ -8,6 +8,7 @@ import { FloatingElements } from "@/components/floating-elements"
 import { MusicPlayer } from "@/components/music-player"
 import { CountdownTimer } from "@/components/countdown-timer"
 import { MessagesWall } from "@/components/messages-wall"
+import { SimpleRsvpForm } from "@/components/simple-rsvp-form"
 
 interface EventSetting {
   setting_key: string
@@ -128,25 +129,8 @@ export default function BabyShowerPage() {
         </div>
       </section>
 
-      <section
-        id="invitation"
-        className="flex items-center justify-center px-4 py-16 bg-white/50 relative z-10"
-      >
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl md:text-6xl font-serif text-[#3CB371] mb-8">Você está convidado!</h2>
-
-          <Card className="bg-gradient-to-br from-white to-[#f0f8f0] border-[#3CB371]/30 shadow-xl">
-            <CardContent className="p-8 md:p-12">
-              <div className="text-lg md:text-xl text-[#2d5a3d] leading-relaxed space-y-6">
-                <p>Com muito amor e alegria, convidamos você para celebrar a chegada do nosso pequeno Lucca.</p>
-                <p>
-                  Será um momento especial de união, carinho e muita felicidade. Sua presença tornará este dia ainda
-                  mais especial!
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+      <section id="rsvp" className="flex items-center justify-center px-4 py-16 bg-white/50 relative z-10">
+        <SimpleRsvpForm />
       </section>
 
       <section id="messages" className="flex items-center justify-center px-4 py-16 relative z-10">

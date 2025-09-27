@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { supabase, type Message as MessageType, type Profile } from "@/src/integrations/supabase/client"
+import { supabase, type Message as MessageType, type Profile, type Confirmation as ConfirmationType } from "@/src/integrations/supabase/client"
 import { toast } from "sonner"
 import { AdminLoadingSpinner } from "@/components/admin/admin-loading-spinner"
 import { AdminDashboardLayout } from "@/components/admin/admin-dashboard-layout"
@@ -23,6 +23,7 @@ export default function AdminPage() {
   const [isCreatingAdmin, setIsCreatingAdmin] = useState(false)
 
   const [messages, setMessages] = useState<MessageType[]>([])
+  const [confirmations, setConfirmations] = useState<ConfirmationType[]>([])
   const [settings, setSettings] = useState<Record<string, string>>({})
 
   useEffect(() => {
@@ -109,6 +110,15 @@ export default function AdminPage() {
       setMessages(messagesData || [])
     }
 
+    // Fetch Confirmations
+    const { data: confirmationsData, error: confirmationsError } = await supabase.from("confirmations").select("*").order("created_at", { ascending: false })
+    if (confirmationsError) {
+      console.error("Error fetching confirmations:", confirmationsError)
+      toast.error("Erro ao carregar confirmações.")
+    } else {
+      setConfirmations(confirmationsData || [])
+    }
+
     // Fetch Settings
     const { data: settingsData, error: settingsError } = await supabase.from("event_settings").select("*")
     if (settingsError) {
@@ -151,6 +161,20 @@ export default function AdminPage() {
     } else {
       console.error("Error toggling message approval:", error)
       toast.error("Erro ao atualizar aprovação da mensagem.")
+    }
+  }
+
+  const deleteConfirmation = async (id: number) => {
+    if (confirm("Tem certeza que deseja remover esta confirmação?")) {
+      const { error } = await supabase.from("confirmations").delete().eq("id", id)
+
+      if (!error) {
+        setConfirmations(confirmations.filter((c) => c.id !== id))
+        toast.success("Confirmação removida com sucesso!")
+      } else {
+        console.error("Error deleting confirmation:", error)
+        toast.error("Erro ao remover confirmação.")
+      }
     }
   }
 
@@ -211,11 +235,13 @@ export default function AdminPage() {
     <AdminDashboardLayout
       profile={profile}
       messages={messages}
+      confirmations={confirmations}
       settings={settings}
       loadingData={loadingData}
       onLogout={handleLogout}
       onDeleteMessage={deleteMessage}
       onToggleMessageApproval={toggleMessageApproval}
+      onDeleteConfirmation={deleteConfirmation}
       onUpdateSetting={updateSetting}
       onSettingsChange={handleSettingsChange}
       onCreateAdminUser={handleCreateAdminUser}

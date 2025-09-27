@@ -3,21 +3,24 @@
 import type React from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { LogOut, MessageSquare, Settings, UserPlus } from "lucide-react"
+import { LogOut, MessageSquare, Settings, UserPlus, Users } from "lucide-react"
 import { AdminMessagesTab } from "./admin-messages-tab"
 import { AdminSettingsTab } from "./admin-settings-tab"
 import { AdminManageAdminsTab } from "./admin-manage-admins-tab"
-import { type Message as MessageType, type Profile } from "@/src/integrations/supabase/client"
+import { AdminConfirmationsList } from "./admin-confirmations-list"
+import { type Message as MessageType, type Profile, type Confirmation as ConfirmationType } from "@/src/integrations/supabase/client"
 import { type CreateAdminUserFormInputs } from "./admin-manage-admins-tab"
 
 interface AdminDashboardLayoutProps {
   profile: Profile | null
   messages: MessageType[]
+  confirmations: ConfirmationType[]
   settings: Record<string, string>
   loadingData: boolean
   onLogout: () => Promise<void>
   onDeleteMessage: (id: number) => Promise<void>
   onToggleMessageApproval: (id: number, approved: boolean) => Promise<void>
+  onDeleteConfirmation: (id: number) => Promise<void>
   onUpdateSetting: (key: string, value: string) => Promise<void>
   onSettingsChange: (key: string, value: string) => void
   onCreateAdminUser: (values: CreateAdminUserFormInputs) => Promise<void>
@@ -27,17 +30,19 @@ interface AdminDashboardLayoutProps {
 export function AdminDashboardLayout({
   profile,
   messages,
+  confirmations,
   settings,
   loadingData,
   onLogout,
   onDeleteMessage,
   onToggleMessageApproval,
+  onDeleteConfirmation,
   onUpdateSetting,
   onSettingsChange,
   onCreateAdminUser,
   isCreatingAdmin,
 }: AdminDashboardLayoutProps) {
-  const [activeTab, setActiveTab] = useState<"messages" | "settings" | "manage-admins">("messages")
+  const [activeTab, setActiveTab] = useState<"messages" | "confirmations" | "settings" | "manage-admins">("messages")
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-amber-50 p-4">
@@ -64,6 +69,14 @@ export function AdminDashboardLayout({
             Mensagens
           </Button>
           <Button
+            variant={activeTab === "confirmations" ? "default" : "outline"}
+            onClick={() => setActiveTab("confirmations")}
+            className="flex items-center gap-2"
+          >
+            <Users className="w-4 h-4" />
+            Confirmados
+          </Button>
+          <Button
             variant={activeTab === "settings" ? "default" : "outline"}
             onClick={() => setActiveTab("settings")}
             className="flex items-center gap-2"
@@ -88,6 +101,13 @@ export function AdminDashboardLayout({
             loading={loadingData}
             onDeleteMessage={onDeleteMessage}
             onToggleMessageApproval={onToggleMessageApproval}
+          />
+        )}
+        {activeTab === "confirmations" && (
+          <AdminConfirmationsList
+            confirmations={confirmations}
+            loading={loadingData}
+            onDeleteConfirmation={onDeleteConfirmation}
           />
         )}
         {activeTab === "settings" && (
