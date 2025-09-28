@@ -45,7 +45,7 @@ export function AdminDashboardLayout({
   const [activeTab, setActiveTab] = useState<"messages" | "confirmations" | "settings" | "manage-admins">("messages")
 
   return (
-    <div className="min-h-screen bg-[#f9f6f2] p-4">
+    <div className="min-h-screen bg-background p-4">
       <div className="max-w-6xl mx-auto">
         <div className="mb-6 flex justify-between items-center">
           <div>

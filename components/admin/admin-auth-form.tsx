@@ -38,7 +38,7 @@ export function AdminAuthForm({ onLogin, onPasswordReset, isSubmitting }: AdminA
   }
 
   return (
-    <div className="min-h-screen bg-[#f9f6f2] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="font-serif text-2xl text-[#7a5a43]">Área Administrativa</CardTitle>
