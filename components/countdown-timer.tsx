@@ -41,7 +41,7 @@ export function CountdownTimer({ targetDateTime }: CountdownTimerProps) {
   return (
     <Card className="bg-white/90 backdrop-blur-sm border-[#3CB371]/30 shadow-lg">
       <CardContent className="p-6">
-        <h3 className="font-serif text-2xl text-[#3CB371] text-center mb-4">Contagem Regressiva</h3>
+        <h3 className="font-serif text-3xl text-[#3CB371] text-center mb-4">Contagem Regressiva</h3>
         <div className="grid grid-cols-4 gap-4 text-center">
           <div className="bg-[#f0f8f0] rounded-lg p-3">
             <div className="text-2xl font-bold text-[#2d5a3d]">{timeLeft.days}</div>

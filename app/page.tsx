@@ -132,7 +132,7 @@ export default function BabyShowerPage() {
             <CardContent className="p-6">
               <div className="text-center mb-6">
                 <Gift className="text-[#DAA520] mx-auto mb-2" size={32} />
-                <h3 className="font-serif text-2xl text-[#3CB371]">Sugestão de Presente</h3>
+                <h3 className="font-serif text-3xl text-[#3CB371]">Sugestão de Presente</h3>
               </div>
               <p className="text-center text-[#2d5a3d] mb-4">Sua presença será o nosso maior presente! 💕</p>
               <p className="text-center text-[#2d5a3d] mb-6">
@@ -160,7 +160,7 @@ export default function BabyShowerPage() {
           <Card className="mt-8 bg-white/90 backdrop-blur-sm border-[#3CB371]/30 shadow-lg text-left">
             <CardContent className="p-6">
               <div className="text-center mb-6">
-                <h3 className="font-serif text-2xl text-[#3CB371]">🥂 Importante</h3>
+                <h3 className="font-serif text-3xl text-[#3CB371]">🥂 Importante</h3>
               </div>
               <p className="text-center text-[#2d5a3d] mb-4">
                 No nosso chá de Bebê já teremos refrigerante e suco para todos!
