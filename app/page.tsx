@@ -89,7 +89,7 @@ export default function BabyShowerPage() {
             <h1 className="text-5xl md:text-6xl font-serif text-[#7a5a43] mb-4 animate-heartbeat">
               {eventSettings.event_title || "Chá de Bebê do Lucca"}
             </h1>
-            <div className="flex items-center justify-center gap-4 text-[#c1a892] text-4xl mb-6">
+            <div className="flex items-center justify-center gap-4 text-[#7a5a43] text-4xl mb-6">
               <Heart className="animate-heartbeat" />
               <span className="font-serif text-3xl">está chegando!</span>
               <Heart className="animate-heartbeat" />
@@ -179,7 +179,7 @@ export default function BabyShowerPage() {
             <div className="text-lg text-[#7a5a43] leading-relaxed space-y-6">
               <p>Mal podemos esperar para compartilhar este momento especial com você!</p>
               <p>O Lucca já está ansioso para conhecer todos que o amam.</p>
-              <div className="flex items-center justify-center gap-4 text-[#c1a892] text-3xl mt-8">
+              <div className="flex items-center justify-center gap-4 text-[#7a5a43] text-3xl mt-8">
                 <Heart className="animate-heartbeat" />
                 <span className="font-serif">Com amor, a família</span>
                 <Heart className="animate-heartbeat" />
