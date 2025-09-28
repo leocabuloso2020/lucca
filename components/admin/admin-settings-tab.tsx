@@ -53,7 +53,7 @@ export function AdminSettingsTab({
           </div>
 
           <div>
-            <Label className="block text-sm font-medium mb-2">Horário do Evento</Label>
+            <Label className="block text-sm font-medium mb-2">Horário de Início</Label>
             <div className="flex gap-2">
               <Input
                 type="time"
@@ -61,6 +61,18 @@ export function AdminSettingsTab({
                 onChange={(e) => onSettingsChange("event_time", e.target.value)}
               />
               <Button onClick={() => onUpdateSetting("event_time", settings.event_time)}>Salvar</Button>
+            </div>
+          </div>
+
+          <div>
+            <Label className="block text-sm font-medium mb-2">Horário de Término</Label>
+            <div className="flex gap-2">
+              <Input
+                type="time"
+                value={settings.event_time_end || ""}
+                onChange={(e) => onSettingsChange("event_time_end", e.target.value)}
+              />
+              <Button onClick={() => onUpdateSetting("event_time_end", settings.event_time_end)}>Salvar</Button>
             </div>
           </div>
 

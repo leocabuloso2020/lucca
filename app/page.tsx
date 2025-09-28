@@ -67,14 +67,15 @@ export default function BabyShowerPage() {
     }
   }
 
-  const formatTime = (timeString: string) => {
-    if (!timeString) return "Hora a definir"
-    // Assuming timeString is in "HH:MM" format
-    return timeString
+  const formatTimeRange = (startTime: string, endTime: string) => {
+    if (!startTime) return "Hora a definir"
+    if (!endTime) return startTime // Return only start time if no end time
+    return `${startTime} - ${endTime}`
   }
 
   const eventDate = eventSettings.event_date || "2025-03-15" // Default if not set
   const eventTime = eventSettings.event_time || "14:00" // Default if not set
+  const eventEndTime = eventSettings.event_time_end || ""
   const eventDateTime = `${eventDate}T${eventTime}:00` // Combine for CountdownTimer
 
   if (loading) {
@@ -116,7 +117,7 @@ export default function BabyShowerPage() {
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="text-[#3CB371]" />
-                <span className="font-medium">{formatTime(eventTime)}</span>
+                <span className="font-medium">{formatTimeRange(eventTime, eventEndTime)}</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="text-[#3CB371]" />
