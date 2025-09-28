@@ -71,7 +71,7 @@ export default function BabyShowerPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f2ebdd]">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="animate-spin text-[#7a5a43]" size={48} />
         <span className="ml-4 text-[#7a5a43]">Carregando informações do evento...</span>
       </div>
@@ -79,7 +79,7 @@ export default function BabyShowerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f2ebdd] relative">
+    <div className="min-h-screen bg-background relative">
       <FloatingElements />
       <MusicPlayer />
 
@@ -175,7 +175,7 @@ export default function BabyShowerPage() {
       <section id="closing" className="flex items-center justify-center px-4 py-16 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl md:text-6xl font-serif text-[#7a5a43] mb-8">Até Breve!</h2>
-          <div className="bg-gradient-to-br from-white to-[#f2ebdd] rounded-2xl p-8 md:p-12 shadow-xl border border-[#c1a892]/30">
+          <div className="bg-gradient-to-br from-white to-background rounded-2xl p-8 md:p-12 shadow-xl border border-[#c1a892]/30">
             <div className="text-lg text-[#7a5a43] leading-relaxed space-y-6">
               <p>Mal podemos esperar para compartilhar este momento especial com você!</p>
               <p>O Lucca já está ansioso para conhecer todos que o amam.</p>

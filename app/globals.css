@@ -11,7 +11,7 @@
   --theme-card: #ffffff;
 
   /* Mapping to shadcn/ui theme */
-  --background: 27 25% 91%; /* #f2ebdd */
+  --background: 27 25% 95.5%; /* #f9f6f2 - Lighter version */
   --foreground: 27 25% 25%; /* #7a5a43 */
   --card: 0 0% 100%; /* #ffffff */
   --card-foreground: 27 25% 25%; /* #7a5a43 */
@@ -21,7 +21,7 @@
   --primary-foreground: 27 25% 91%; /* #f2ebdd */
   --secondary: 27 15% 66%; /* #c1a892 */
   --secondary-foreground: 27 25% 25%; /* #7a5a43 */
-  --muted: 27 25% 91%; /* #f2ebdd */
+  --muted: 27 25% 95.5%; /* #f9f6f2 - Lighter version */
   --muted-foreground: 27 15% 66%; /* #c1a892 */
   --accent: 27 15% 66%; /* #c1a892 */
   --accent-foreground: 27 25% 25%; /* #7a5a43 */
