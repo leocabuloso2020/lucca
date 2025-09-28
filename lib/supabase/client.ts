@@ -1,7 +1,8 @@
 import { createClient } from "@supabase/supabase-js"
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+// Forçando os valores corretos para eliminar o erro de conexão.
+const supabaseUrl = "https://ebbygtitglsunqozqfgx.supabase.co"
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViYnlndGl0Z2xzdW5xb3pxZmd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU2NDg2NzQsImV4cCI6MjA3MTIyNDY3NH0.piwgVaCUrmksr4oqMUNPoYbuqnHDq3Fj_LauE9AQZ1c"
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
