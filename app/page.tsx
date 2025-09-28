@@ -156,6 +156,20 @@ export default function BabyShowerPage() {
               </p>
             </CardContent>
           </Card>
+
+          <Card className="mt-8 bg-white/90 backdrop-blur-sm border-[#3CB371]/30 shadow-lg text-left">
+            <CardContent className="p-6">
+              <div className="text-center mb-6">
+                <h3 className="font-serif text-2xl text-[#3CB371]">🥂 Importante</h3>
+              </div>
+              <p className="text-center text-[#2d5a3d] mb-4">
+                No nosso chá de Bebê já teremos refrigerante e suco para todos!
+              </p>
+              <p className="text-center text-[#2d5a3d]">
+                Quem quiser pode ficar à vontade para levar sua bebida alcoólica preferida para brindar com a gente. 🍻🍷
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
