@@ -1,30 +1,18 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import dynamic from "next/dynamic" // Importar dynamic
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { supabase } from "@/src/integrations/supabase/client"
 import { toast } from "sonner"
 import { Loader2, PartyPopper, Check } from "lucide-react"
-// Importar Confetti dinamicamente para garantir que seja carregado apenas no cliente
-const Confetti = dynamic(() => import("react-confetti"), { ssr: false });
+import { ConfettiEffect } from "./confetti-effect"
 
 export function SimpleRsvpForm() {
   const [name, setName] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowSize({ width: window.innerWidth, height: window.innerHeight })
-    }
-    window.addEventListener("resize", handleResize)
-    handleResize() // Set initial size
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -52,16 +40,7 @@ export function SimpleRsvpForm() {
   if (isSubmitted) {
     return (
       <div className="text-center max-w-md mx-auto">
-        {/* Renderizar Confetti apenas se windowSize.width for maior que 0 */}
-        {windowSize.width > 0 && (
-          <Confetti
-            width={windowSize.width}
-            height={windowSize.height}
-            recycle={false}
-            numberOfPieces={300}
-            gravity={0.1}
-          />
-        )}
+        <ConfettiEffect />
         <div className="bg-green-100 rounded-full p-4 inline-block mb-4">
           <PartyPopper className="text-green-600" size={48} />
         </div>
