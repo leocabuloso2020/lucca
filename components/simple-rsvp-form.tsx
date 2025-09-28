@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { supabase } from "@/lib/supabase/client"
@@ -51,45 +51,45 @@ export function SimpleRsvpForm() {
           </p>
         </div>
       ) : (
-        <Card className="w-full max-w-4xl mx-auto bg-white/80 backdrop-blur-sm border-[#3CB371]/30 shadow-lg">
-          <CardHeader className="text-center">
-            <CardTitle className="font-serif text-3xl text-[#3CB371]">Confirme sua Presença</CardTitle>
-            <CardDescription className="text-[#2d5a3d]">
-              Meus papais pedem a gentileza da sua confirmação até o dia 10 de outubro.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
-              <div>
-                <Input
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="border-[#3CB371]/30 focus:border-[#3CB371] focus:ring-[#3CB371] text-center text-lg h-12"
-                  placeholder="Seu nome completo"
-                  required
-                />
-              </div>
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-[#3CB371] hover:bg-[#2d5a3d] text-white py-3 text-lg"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Confirmando...
-                  </>
-                ) : (
-                  <>
-                    <Check className="mr-2" size={20} />
-                    Confirmar Presença
-                  </>
-                )}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+        <div className="w-full max-w-4xl mx-auto text-center">
+          <h2 className="text-5xl md:text-6xl font-serif text-[#3CB371] mb-4">Confirme sua Presença</h2>
+          <p className="text-lg text-[#2d5a3d] mb-6">
+            Meus papais pedem a gentileza da sua confirmação até o dia 10 de outubro.
+          </p>
+          <Card className="w-full bg-white/80 backdrop-blur-sm border-[#3CB371]/30 shadow-lg">
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
+                <div>
+                  <Input
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="border-[#3CB371]/30 focus:border-[#3CB371] focus:ring-[#3CB371] text-center text-lg h-12"
+                    placeholder="Seu nome completo"
+                    required
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-[#3CB371] hover:bg-[#2d5a3d] text-white py-3 text-lg"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Confirmando...
+                    </>
+                  ) : (
+                    <>
+                      <Check className="mr-2" size={20} />
+                      Confirmar Presença
+                    </>
+                  )}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
       )}
     </>
   )
