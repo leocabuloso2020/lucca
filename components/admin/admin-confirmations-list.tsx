@@ -4,7 +4,7 @@ import type React from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Users, Trash2, Loader2 } from "lucide-react"
-import { type Confirmation as ConfirmationType } from "@/src/integrations/supabase/client"
+import { type Confirmation as ConfirmationType } from "@/lib/supabase/client"
 
 interface AdminConfirmationsListProps {
   confirmations: ConfirmationType[]

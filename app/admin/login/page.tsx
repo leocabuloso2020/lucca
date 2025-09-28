@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { supabase } from "@/src/integrations/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 import { toast } from "sonner"
 import { AdminAuthForm, type AdminLoginFormInputs } from "@/components/admin/admin-auth-form"
 import { AdminLoadingSpinner } from "@/components/admin/admin-loading-spinner"

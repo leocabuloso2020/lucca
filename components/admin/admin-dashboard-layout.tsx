@@ -8,7 +8,7 @@ import { AdminMessagesTab } from "./admin-messages-tab"
 import { AdminSettingsTab } from "./admin-settings-tab"
 import { AdminManageAdminsTab } from "./admin-manage-admins-tab"
 import { AdminConfirmationsList } from "./admin-confirmations-list"
-import { type Message as MessageType, type Profile, type Confirmation as ConfirmationType } from "@/src/integrations/supabase/client"
+import { type Message as MessageType, type Profile, type Confirmation as ConfirmationType } from "@/lib/supabase/client"
 import { type CreateAdminUserFormInputs } from "./admin-manage-admins-tab"
 
 interface AdminDashboardLayoutProps {
