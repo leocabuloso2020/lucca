@@ -39,7 +39,7 @@ export function SimpleRsvpForm() {
 
   if (isSubmitted) {
     return (
-      <div className="text-center max-w-md mx-auto">
+      <div className="text-center w-full max-w-4xl mx-auto">
         <ConfettiEffect />
         <div className="bg-green-100 rounded-full p-4 inline-block mb-4">
           <PartyPopper className="text-green-600" size={48} />
@@ -53,13 +53,13 @@ export function SimpleRsvpForm() {
   }
 
   return (
-    <Card className="max-w-md mx-auto bg-white/80 backdrop-blur-sm border-[#3CB371]/30 shadow-lg">
+    <Card className="w-full max-w-4xl mx-auto bg-white/80 backdrop-blur-sm border-[#3CB371]/30 shadow-lg">
       <CardHeader className="text-center">
         <CardTitle className="font-serif text-3xl text-[#3CB371]">Confirme sua Presença</CardTitle>
         <CardDescription className="text-[#2d5a3d]">É rapidinho, só precisamos do seu nome!</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
           <div>
             <Input
               id="name"
