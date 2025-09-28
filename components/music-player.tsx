@@ -3,77 +3,69 @@
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Volume2, VolumeX, Play, Pause } from "lucide-react"
-import { toast } from "sonner" // Import Sonner for notifications
+import { toast } from "sonner"
 
-// Use uma variável de ambiente para a URL da música
-const MUSIC_URL = process.env.NEXT_PUBLIC_MUSIC_URL || "/pvc.mp3"; // Fallback para o caminho local se a variável não estiver definida
+const MUSIC_URL = process.env.NEXT_PUBLIC_MUSIC_URL || "/pvc.mp3";
 
 export function MusicPlayer() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [isAudioUnavailable, setIsAudioUnavailable] = useState(false) // Para erros reais do arquivo de áudio
-  const [isAutoplayBlocked, setIsAutoplayBlocked] = useState(false) // Para bloqueio de autoplay do navegador
+  const [isAudioUnavailable, setIsAudioUnavailable] = useState(false)
+  const [isAutoplayBlocked, setIsAutoplayBlocked] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
-    console.log("[MusicPlayer] Initializing with MUSIC_URL:", MUSIC_URL); // Adicionado para depuração
     if (audioRef.current) {
       audioRef.current.volume = 0.3
-      audioRef.current.loop = false; // Explicitamente garantindo que não haja loop
+      audioRef.current.loop = false;
 
       const audio = audioRef.current;
-      let loadingTimeout: NodeJS.Timeout; // Variável para o timeout
+      let loadingTimeout: NodeJS.Timeout;
 
       const handleCanPlay = () => {
-        console.log("[MusicPlayer] Audio can play. Setting isLoading to false.");
-        clearTimeout(loadingTimeout); // Limpa o timeout em caso de sucesso
+        clearTimeout(loadingTimeout);
         setIsLoading(false);
         setIsAudioUnavailable(false);
         setIsAutoplayBlocked(false);
       };
 
       const handleError = () => {
-        console.error("[MusicPlayer] Audio failed to load or play. Setting isAudioUnavailable to true.");
-        clearTimeout(loadingTimeout); // Limpa o timeout em caso de erro
+        clearTimeout(loadingTimeout);
         setIsLoading(false);
-        setIsAudioUnavailable(true); // Este é um erro real de carregamento
-        setIsPlaying(false); // Garante que o estado de reprodução seja falso em caso de erro
+        setIsAudioUnavailable(true);
+        setIsPlaying(false);
         toast.error("Erro ao carregar a música. Verifique o arquivo de áudio.")
       };
 
       const handleLoadStart = () => {
-        console.log("[MusicPlayer] Audio load start. Setting isLoading to true.");
         setIsLoading(true);
-        setIsAudioUnavailable(false); // Resetar erros em nova tentativa de carregamento
+        setIsAudioUnavailable(false);
         setIsAutoplayBlocked(false);
 
-        // Define um timeout para o carregamento (ex: 30 segundos)
         loadingTimeout = setTimeout(() => {
-          console.warn("[MusicPlayer] Audio loading timed out. Assuming audio is unavailable.");
           setIsLoading(false);
           setIsAudioUnavailable(true);
           setIsPlaying(false);
           toast.error("A música demorou muito para carregar ou está indisponível.");
-        }, 30000); // Aumentado para 30 segundos
+        }, 30000);
       };
 
       const handleEnded = () => {
-        console.log("[MusicPlayer] Audio ended. Setting isPlaying to false.");
-        setIsPlaying(false); // Garante que o estado seja atualizado quando a música termina
+        setIsPlaying(false);
       };
 
       audio.addEventListener("canplay", handleCanPlay);
       audio.addEventListener("error", handleError);
       audio.addEventListener("loadstart", handleLoadStart);
-      audio.addEventListener("ended", handleEnded); // Adiciona listener para o evento 'ended'
+      audio.addEventListener("ended", handleEnded);
 
       return () => {
-        clearTimeout(loadingTimeout); // Limpa o timeout ao desmontar o componente
+        clearTimeout(loadingTimeout);
         audio.removeEventListener("canplay", handleCanPlay);
         audio.removeEventListener("error", handleError);
         audio.removeEventListener("loadstart", handleLoadStart);
-        audio.removeEventListener("ended", handleEnded); // Limpa o listener
+        audio.removeEventListener("ended", handleEnded);
       }
     }
   }, [])
@@ -86,31 +78,28 @@ export function MusicPlayer() {
       setIsPlaying(false)
       toast.info("Música pausada.")
     } else {
-      // Se o áudio estiver indisponível devido a um erro de carregamento, não tente tocar
       if (isAudioUnavailable) {
         toast.error("A música não está disponível devido a um erro de carregamento.");
         return;
       }
 
       setIsLoading(true)
-      setIsPlaying(false) // Garante que isPlaying seja falso enquanto tenta carregar/tocar
+      setIsPlaying(false)
       try {
         await audioRef.current.play()
         setIsPlaying(true)
         setIsLoading(false)
-        setIsAutoplayBlocked(false) // Tocou com sucesso, então o autoplay não está mais bloqueado
+        setIsAutoplayBlocked(false)
         toast.success("Música tocando!")
-        console.log("[MusicPlayer] Music started playing")
       } catch (error) {
-        console.error("[MusicPlayer] Autoplay prevented or audio error:", error)
         setIsLoading(false)
-        setIsPlaying(false) // Garante que isPlaying seja falso em caso de erro
+        setIsPlaying(false)
         
         if ((error as DOMException)?.name === "NotAllowedError") {
-          setIsAutoplayBlocked(true); // Autoplay foi bloqueado, mas o botão deve continuar clicável para reprodução manual
+          setIsAutoplayBlocked(true);
           toast.error("O navegador bloqueou a reprodução automática. Por favor, clique no botão para tocar a música.");
         } else {
-          setIsAudioUnavailable(true); // Outros erros são erros reais de carregamento/reprodução
+          setIsAudioUnavailable(true);
           toast.error("Erro ao iniciar a música. Verifique o arquivo de áudio.");
         }
       }
@@ -126,8 +115,7 @@ export function MusicPlayer() {
   }
 
   return (
-    <div className="fixed top-0 left-0 w-full bg-[#3CB371] text-white p-2 z-50 flex items-center justify-between shadow-lg">
-      {/* Empty div to push the text to center */}
+    <div className="fixed top-0 left-0 w-full bg-[#7a5a43] text-white p-2 z-50 flex items-center justify-between shadow-lg">
       <div className="flex-1 hidden md:block"></div> 
       
       <div className="flex-1 flex items-center justify-center">
@@ -137,11 +125,11 @@ export function MusicPlayer() {
         <Button
           onClick={togglePlay}
           disabled={isLoading || isAudioUnavailable}
-          className="bg-white text-[#3CB371] hover:bg-gray-100 rounded-full w-8 h-8 p-0 flex items-center justify-center shadow-md disabled:opacity-50"
+          className="bg-white text-[#7a5a43] hover:bg-gray-100 rounded-full w-8 h-8 p-0 flex items-center justify-center shadow-md disabled:opacity-50"
           size="sm"
         >
           {isLoading ? (
-            <div className="w-4 h-4 border-2 border-[#3CB371] border-t-transparent rounded-full animate-spin" />
+            <div className="w-4 h-4 border-2 border-[#7a5a43] border-t-transparent rounded-full animate-spin" />
           ) : isPlaying ? (
             <Pause size={16} />
           ) : (
@@ -151,13 +139,13 @@ export function MusicPlayer() {
         <Button
           onClick={toggleMute}
           disabled={isAudioUnavailable}
-          className="bg-white text-[#3CB371] hover:bg-gray-100 rounded-full w-8 h-8 p-0 flex items-center justify-center shadow-md disabled:opacity-50"
+          className="bg-white text-[#7a5a43] hover:bg-gray-100 rounded-full w-8 h-8 p-0 flex items-center justify-center shadow-md disabled:opacity-50"
           size="sm"
         >
           {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
         </Button>
       </div>
-      <audio ref={audioRef} preload="metadata"> {/* Alterado para 'metadata' */}
+      <audio ref={audioRef} preload="metadata">
         <source src={MUSIC_URL} type="audio/mpeg" />
       </audio>
       {(isAudioUnavailable || isAutoplayBlocked) && (

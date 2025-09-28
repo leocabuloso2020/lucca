@@ -38,10 +38,10 @@ export function AdminAuthForm({ onLogin, onPasswordReset, isSubmitting }: AdminA
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-amber-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#f2ebdd] flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="font-serif text-2xl text-green-600">Área Administrativa</CardTitle>
+          <CardTitle className="font-serif text-2xl text-[#7a5a43]">Área Administrativa</CardTitle>
           <p className="text-gray-600">Chá de Bebê do Lucca</p>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -64,7 +64,7 @@ export function AdminAuthForm({ onLogin, onPasswordReset, isSubmitting }: AdminA
                 <button
                   type="button"
                   onClick={handlePasswordResetClick}
-                  className="text-sm text-green-600 hover:underline"
+                  className="text-sm text-[#7a5a43] hover:underline"
                 >
                   Esqueci minha senha
                 </button>
@@ -79,7 +79,7 @@ export function AdminAuthForm({ onLogin, onPasswordReset, isSubmitting }: AdminA
                 <p className="text-red-500 text-sm mt-1">{form.formState.errors.password.message}</p>
               )}
             </div>
-            <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" disabled={isSubmitting}>
+            <Button type="submit" className="w-full bg-[#7a5a43] hover:bg-[#c1a892] text-white" disabled={isSubmitting}>
               {isSubmitting ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (

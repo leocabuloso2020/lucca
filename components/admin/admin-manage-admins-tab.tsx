@@ -38,9 +38,8 @@ export function AdminManageAdminsTab({ onCreateAdminUser, isSubmitting }: AdminM
   const onSubmit = async (values: CreateAdminUserFormInputs) => {
     try {
       await onCreateAdminUser(values);
-      form.reset(); // Reset the form on successful submission
+      form.reset();
     } catch (error) {
-      // Error handling is done in the parent component (AdminPage)
       console.error("Error in AdminManageAdminsTab onSubmit:", error);
     }
   };
@@ -105,7 +104,7 @@ export function AdminManageAdminsTab({ onCreateAdminUser, isSubmitting }: AdminM
               )}
             </div>
           </div>
-          <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" disabled={isSubmitting}>
+          <Button type="submit" className="w-full bg-[#7a5a43] hover:bg-[#c1a892] text-white" disabled={isSubmitting}>
             {isSubmitting ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (

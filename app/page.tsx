@@ -28,7 +28,6 @@ export default function BabyShowerPage() {
 
       if (error) {
         console.error("Error fetching event settings:", error)
-        // Fallback to default values or show an error message
       } else if (data) {
         const settingsObj = data.reduce(
           (acc: Record<string, string>, item: EventSetting) => {
@@ -44,14 +43,6 @@ export default function BabyShowerPage() {
 
     fetchEventSettings()
   }, [])
-
-  const scrollToSection = (sectionId: string) => {
-    document.getElementById(sectionId)?.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    })
-    setCurrentSection(sectionId)
-  }
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "Data a definir"
@@ -69,58 +60,58 @@ export default function BabyShowerPage() {
 
   const formatTimeRange = (startTime: string, endTime: string) => {
     if (!startTime) return "Hora a definir"
-    if (!endTime) return startTime // Return only start time if no end time
+    if (!endTime) return startTime
     return `${startTime} - ${endTime}`
   }
 
-  const eventDate = eventSettings.event_date || "2025-03-15" // Default if not set
-  const eventTime = eventSettings.event_time || "14:00" // Default if not set
+  const eventDate = eventSettings.event_date || "2025-03-15"
+  const eventTime = eventSettings.event_time || "14:00"
   const eventEndTime = eventSettings.event_time_end || ""
-  const eventDateTime = `${eventDate}T${eventTime}:00` // Combine for CountdownTimer
+  const eventDateTime = `${eventDate}T${eventTime}:00`
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="animate-spin text-[#3CB371]" size={48} />
-        <span className="ml-4 text-[#2d5a3d]">Carregando informações do evento...</span>
+      <div className="min-h-screen flex items-center justify-center bg-[#f2ebdd]">
+        <Loader2 className="animate-spin text-[#7a5a43]" size={48} />
+        <span className="ml-4 text-[#7a5a43]">Carregando informações do evento...</span>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FFF9F2] via-white to-[#f0f8f0] relative">
+    <div className="min-h-screen bg-[#f2ebdd] relative">
       <FloatingElements />
       <MusicPlayer />
 
       <section id="opening" className="min-h-screen flex items-center justify-center px-4 py-16 relative z-10">
         <div className="text-center max-w-4xl mx-auto animate-fade-in-up">
           <div className="mb-8">
-            <h1 className="text-5xl md:text-6xl font-serif text-[#3CB371] mb-4 animate-heartbeat">
+            <h1 className="text-5xl md:text-6xl font-serif text-[#7a5a43] mb-4 animate-heartbeat">
               {eventSettings.event_title || "Chá de Bebê do Lucca"}
             </h1>
-            <div className="flex items-center justify-center gap-4 text-[#DAA520] text-4xl mb-6">
+            <div className="flex items-center justify-center gap-4 text-[#c1a892] text-4xl mb-6">
               <Heart className="animate-heartbeat" />
               <span className="font-serif text-3xl">está chegando!</span>
               <Heart className="animate-heartbeat" />
             </div>
           </div>
 
-          <p className="text-xl text-[#2d5a3d] mb-8 font-light leading-relaxed">
+          <p className="text-xl text-[#7a5a43] mb-8 font-light leading-relaxed">
             Venha celebrar conosco este momento especial e dar as boas-vindas ao nosso pequeno príncipe
           </p>
 
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-[#3CB371]/20 mb-8">
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6 text-[#2d5a3d]">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-[#c1a892]/20 mb-8">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6 text-[#7a5a43]">
               <div className="flex items-center gap-2">
-                <Calendar className="text-[#3CB371]" />
+                <Calendar className="text-[#c1a892]" />
                 <span className="font-medium">{formatDate(eventDate)}</span>
               </div>
               <div className="flex items-center gap-2">
-                <Clock className="text-[#3CB371]" />
+                <Clock className="text-[#c1a892]" />
                 <span className="font-medium">{formatTimeRange(eventTime, eventEndTime)}</span>
               </div>
               <div className="flex items-center gap-2">
-                <MapPin className="text-[#3CB371]" />
+                <MapPin className="text-[#c1a892]" />
                 <span className="font-medium">{eventSettings.event_address || "Salão de Festas"}</span>
               </div>
             </div>
@@ -128,17 +119,17 @@ export default function BabyShowerPage() {
 
           <CountdownTimer targetDateTime={eventDateTime} />
 
-          <Card className="mt-8 bg-white/90 backdrop-blur-sm border-[#3CB371]/30 shadow-lg text-left">
+          <Card className="mt-8 bg-white/90 backdrop-blur-sm border-[#c1a892]/30 shadow-lg text-left">
             <CardContent className="p-6">
               <div className="text-center mb-6">
-                <Gift className="text-[#DAA520] mx-auto mb-2" size={32} />
-                <h3 className="font-serif text-3xl text-[#3CB371]">Sugestão de Presente</h3>
+                <Gift className="text-[#c1a892] mx-auto mb-2" size={32} />
+                <h3 className="font-serif text-3xl text-[#7a5a43]">Sugestão de Presente</h3>
               </div>
-              <p className="text-center text-[#2d5a3d] mb-4">Sua presença será o nosso maior presente! 💕</p>
-              <p className="text-center text-[#2d5a3d] mb-6">
+              <p className="text-center text-[#7a5a43] mb-4">Sua presença será o nosso maior presente! 💕</p>
+              <p className="text-center text-[#7a5a43] mb-6">
                 Mas, se desejar nos ajudar a preparar essa nova fase, pedimos com muito carinho:
               </p>
-              <ul className="space-y-4 text-[#2d5a3d] list-none p-0 max-w-md mx-auto">
+              <ul className="space-y-4 text-[#7a5a43] list-none p-0 max-w-md mx-auto">
                 <li className="flex items-start">
                   <span className="mr-3 text-xl pt-1">🍼</span>
                   <div>
@@ -151,21 +142,21 @@ export default function BabyShowerPage() {
                   <strong className="font-semibold">E um Mimo especial da sua escolha</strong>
                 </li>
               </ul>
-              <p className="text-center text-[#2d5a3d] mt-6">
+              <p className="text-center text-[#7a5a43] mt-6">
                 Contamos com seu carinho para tornar esse momento ainda mais doce! 🌸
               </p>
             </CardContent>
           </Card>
 
-          <Card className="mt-8 bg-white/90 backdrop-blur-sm border-[#3CB371]/30 shadow-lg text-left">
+          <Card className="mt-8 bg-white/90 backdrop-blur-sm border-[#c1a892]/30 shadow-lg text-left">
             <CardContent className="p-6">
               <div className="text-center mb-6">
-                <h3 className="font-serif text-3xl text-[#3CB371]">🥂 Importante</h3>
+                <h3 className="font-serif text-3xl text-[#7a5a43]">🥂 Importante</h3>
               </div>
-              <p className="text-center text-[#2d5a3d] mb-4">
+              <p className="text-center text-[#7a5a43] mb-4">
                 No nosso chá de Bebê já teremos refrigerante e suco para todos!
               </p>
-              <p className="text-center text-[#2d5a3d]">
+              <p className="text-center text-[#7a5a43]">
                 Quem quiser pode ficar à vontade para levar sua bebida alcoólica preferida para brindar com a gente. 🍻🍷
               </p>
             </CardContent>
@@ -183,12 +174,12 @@ export default function BabyShowerPage() {
 
       <section id="closing" className="flex items-center justify-center px-4 py-16 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl md:text-6xl font-serif text-[#3CB371] mb-8">Até Breve!</h2>
-          <div className="bg-gradient-to-br from-white to-[#f0f8f0] rounded-2xl p-8 md:p-12 shadow-xl border border-[#3CB371]/30">
-            <div className="text-lg text-[#2d5a3d] leading-relaxed space-y-6">
+          <h2 className="text-5xl md:text-6xl font-serif text-[#7a5a43] mb-8">Até Breve!</h2>
+          <div className="bg-gradient-to-br from-white to-[#f2ebdd] rounded-2xl p-8 md:p-12 shadow-xl border border-[#c1a892]/30">
+            <div className="text-lg text-[#7a5a43] leading-relaxed space-y-6">
               <p>Mal podemos esperar para compartilhar este momento especial com você!</p>
               <p>O Lucca já está ansioso para conhecer todos que o amam.</p>
-              <div className="flex items-center justify-center gap-4 text-[#DAA520] text-3xl mt-8">
+              <div className="flex items-center justify-center gap-4 text-[#c1a892] text-3xl mt-8">
                 <Heart className="animate-heartbeat" />
                 <span className="font-serif">Com amor, a família</span>
                 <Heart className="animate-heartbeat" />

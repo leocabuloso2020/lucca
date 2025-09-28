@@ -42,21 +42,21 @@ export function SimpleRsvpForm() {
       {isSubmitted && <ConfettiEffect />}
       {isSubmitted ? (
         <div className="text-center w-full max-w-4xl mx-auto">
-          <div className="bg-green-100 rounded-full p-4 inline-block mb-4">
-            <PartyPopper className="text-green-600" size={48} />
+          <div className="bg-[#c1a892]/20 rounded-full p-4 inline-block mb-4">
+            <PartyPopper className="text-[#7a5a43]" size={48} />
           </div>
-          <h3 className="font-serif text-2xl text-[#3CB371] mb-2">Obrigado por confirmar!</h3>
-          <p className="text-[#2d5a3d] text-lg">
+          <h3 className="font-serif text-2xl text-[#7a5a43] mb-2">Obrigado por confirmar!</h3>
+          <p className="text-[#7a5a43] text-lg">
             Sua presença foi registrada. Mal podemos esperar para celebrar com você!
           </p>
         </div>
       ) : (
         <div className="w-full max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl md:text-6xl font-serif text-[#3CB371] mb-4">Confirme sua Presença</h2>
-          <p className="text-lg text-[#2d5a3d] mb-6">
+          <h2 className="text-5xl md:text-6xl font-serif text-[#7a5a43] mb-4">Confirme sua Presença</h2>
+          <p className="text-lg text-[#7a5a43] mb-6">
             Meus papais pedem a gentileza da sua confirmação até o dia 10 de outubro.
           </p>
-          <Card className="w-full bg-white/80 backdrop-blur-sm border-[#3CB371]/30 shadow-lg">
+          <Card className="w-full bg-white/80 backdrop-blur-sm border-[#c1a892]/30 shadow-lg">
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
                 <div>
@@ -64,7 +64,7 @@ export function SimpleRsvpForm() {
                     id="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="border-[#3CB371]/30 focus:border-[#3CB371] focus:ring-[#3CB371] text-center text-lg h-12"
+                    className="border-[#c1a892]/30 focus:border-[#c1a892] focus:ring-[#c1a892] text-center text-lg h-12"
                     placeholder="Seu nome completo"
                     required
                   />
@@ -72,7 +72,7 @@ export function SimpleRsvpForm() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-[#3CB371] hover:bg-[#2d5a3d] text-white py-3 text-lg"
+                  className="w-full bg-[#7a5a43] hover:bg-[#c1a892] text-white py-3 text-lg"
                 >
                   {isSubmitting ? (
                     <>

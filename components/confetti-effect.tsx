@@ -9,12 +9,12 @@ interface ConfettiPiece {
 
 export function ConfettiEffect({ numberOfPieces = 150 }: { numberOfPieces?: number }) {
   const pieces = useMemo(() => {
-    const colors = ['#3CB371', '#DAA520', '#FFF9F2', '#90ee90', '#2d5a3d'];
+    const colors = ['#f2ebdd', '#c1a892', '#7a5a43', '#ffffff'];
     return Array.from({ length: numberOfPieces }).map((_, index) => {
-      const duration = Math.random() * 3 + 4; // 4 to 7 seconds
-      const delay = Math.random() * 2; // Start falling within 2 seconds
+      const duration = Math.random() * 3 + 4;
+      const delay = Math.random() * 2;
       const initialX = Math.random() * 100;
-      const size = Math.random() * 6 + 4; // 4px to 10px
+      const size = Math.random() * 6 + 4;
       const rotation = Math.random() * 360;
 
       return {

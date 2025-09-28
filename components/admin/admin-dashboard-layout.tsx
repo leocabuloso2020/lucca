@@ -45,11 +45,11 @@ export function AdminDashboardLayout({
   const [activeTab, setActiveTab] = useState<"messages" | "confirmations" | "settings" | "manage-admins">("messages")
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-amber-50 p-4">
+    <div className="min-h-screen bg-[#f2ebdd] p-4">
       <div className="max-w-6xl mx-auto">
         <div className="mb-6 flex justify-between items-center">
           <div>
-            <h1 className="font-serif text-3xl text-green-600 mb-2">Painel Administrativo</h1>
+            <h1 className="font-serif text-3xl text-[#7a5a43] mb-2">Painel Administrativo</h1>
             <p className="text-gray-600">Gerencie o site do Chá de Bebê do Lucca</p>
           </div>
           <Button variant="outline" onClick={onLogout} className="flex items-center gap-2">
@@ -58,7 +58,6 @@ export function AdminDashboardLayout({
           </Button>
         </div>
 
-        {/* Tabs */}
         <div className="flex space-x-4 mb-6">
           <Button
             variant={activeTab === "messages" ? "default" : "outline"}
@@ -94,7 +93,6 @@ export function AdminDashboardLayout({
           </Button>
         </div>
 
-        {/* Conteúdo das abas */}
         {activeTab === "messages" && (
           <AdminMessagesTab
             messages={messages}
@@ -124,7 +122,6 @@ export function AdminDashboardLayout({
           />
         )}
 
-        {/* Botão para voltar ao site */}
         <div className="mt-8 text-center">
           <Button variant="outline" onClick={() => (window.location.href = "/")}>
             Voltar ao Site

@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,16 +9,13 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Heart, MessageCircle, Send, Loader2, Clock } from "lucide-react"
 import { supabase, type Message } from "@/lib/supabase/client"
-import { RealtimePostgresChangesPayload } from "@supabase/supabase-js" // Importando o tipo correto para o payload
+import { RealtimePostgresChangesPayload } from "@supabase/supabase-js"
 
 export function MessagesWall() {
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
-  const [formData, setFormData] = useState({
-    name: "",
-    message: "",
-  })
+  const [formData, setFormData] = useState({ name: "", message: "" })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
@@ -35,11 +31,9 @@ export function MessagesWall() {
   useEffect(() => {
     fetchMessages()
 
-    // Set up real-time subscription
     const subscription = supabase
       .channel("messages")
-      .on("postgres_changes", { event: "*", schema: "public", table: "messages" }, (payload: RealtimePostgresChangesPayload<Message>) => { // Tipagem corrigida
-        console.log("[v0] Messages subscription payload:", payload)
+      .on("postgres_changes", { event: "*", schema: "public", table: "messages" }, (payload: RealtimePostgresChangesPayload<Message>) => {
         if (payload.eventType === "INSERT") {
           const newMessage = payload.new as Message
           if (newMessage.approved) {
@@ -72,7 +66,6 @@ export function MessagesWall() {
 
   const fetchMessages = async () => {
     try {
-      console.log("[v0] Fetching approved messages...")
       const { data, error } = await supabase
         .from("messages")
         .select("*")
@@ -80,10 +73,9 @@ export function MessagesWall() {
         .order("created_at", { ascending: false })
 
       if (error) throw error
-      console.log("[v0] Fetched messages:", data?.length || 0)
       setMessages(data || [])
     } catch (error) {
-      console.error("[v0] Error fetching messages:", error)
+      console.error("Error fetching messages:", error)
     } finally {
       setLoading(false)
     }
@@ -102,7 +94,6 @@ export function MessagesWall() {
     setSuccessMessage("")
 
     try {
-      console.log("[v0] Submitting message:", formData)
       const { error } = await supabase.from("messages").insert([
         {
           author_name: formData.name.trim(),
@@ -117,10 +108,8 @@ export function MessagesWall() {
       setShowForm(false)
       setSuccessMessage("Mensagem enviada! Ela aparecerá no mural após aprovação.")
 
-      // Clear success message after 5 seconds
       setTimeout(() => setSuccessMessage(""), 5000)
     } catch (error) {
-      console.error("[v0] Error submitting message:", error)
       setError("Erro ao enviar mensagem. Tente novamente.")
     } finally {
       setIsSubmitting(false)
@@ -140,12 +129,12 @@ export function MessagesWall() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-8">
-        <h2 className="text-5xl md:text-6xl font-serif text-[#3CB371] mb-4">Mural de Mensagens</h2>
-        <p className="text-lg text-[#2d5a3d] mb-6">Deixe uma mensagem carinhosa para o Lucca e sua família</p>
+        <h2 className="text-5xl md:text-6xl font-serif text-[#7a5a43] mb-4">Mural de Mensagens</h2>
+        <p className="text-lg text-[#7a5a43] mb-6">Deixe uma mensagem carinhosa para o Lucca e sua família</p>
 
         <Button
           onClick={() => setShowForm(!showForm)}
-          className="bg-[#3CB371] hover:bg-[#2d5a3d] text-white px-8 py-3 text-lg font-medium"
+          className="bg-[#7a5a43] hover:bg-[#c1a892] text-white px-8 py-3 text-lg font-medium"
         >
           <MessageCircle className="mr-2" size={20} />
           {showForm ? "Cancelar" : "Deixar Mensagem"}
@@ -164,9 +153,9 @@ export function MessagesWall() {
       )}
 
       {showForm && (
-        <Card className="bg-white border-[#3CB371]/30 shadow-xl mb-8">
+        <Card className="bg-white border-[#c1a892]/30 shadow-xl mb-8">
           <CardHeader>
-            <CardTitle className="text-[#3CB371] font-serif text-xl">Nova Mensagem</CardTitle>
+            <CardTitle className="text-[#7a5a43] font-serif text-xl">Nova Mensagem</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -175,28 +164,28 @@ export function MessagesWall() {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-[#2d5a3d] font-medium">
+                <Label htmlFor="name" className="text-[#7a5a43] font-medium">
                   Seu nome *
                 </Label>
                 <Input
                   id="name"
                   value={formData.name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
-                  className="border-[#3CB371]/30 focus:border-[#3CB371] focus:ring-[#3CB371]"
+                  className="border-[#c1a892]/30 focus:border-[#c1a892] focus:ring-[#c1a892]"
                   placeholder="Seu nome"
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="message" className="text-[#2d5a3d] font-medium">
+                <Label htmlFor="message" className="text-[#7a5a43] font-medium">
                   Sua mensagem *
                 </Label>
                 <Textarea
                   id="message"
                   value={formData.message}
                   onChange={(e) => setFormData((prev) => ({ ...prev, message: e.target.value }))}
-                  className="border-[#3CB371]/30 focus:border-[#3CB371] focus:ring-[#3CB371] min-h-[120px]"
+                  className="border-[#c1a892]/30 focus:border-[#c1a892] focus:ring-[#c1a892] min-h-[120px]"
                   placeholder="Escreva uma mensagem carinhosa para o Lucca e sua família..."
                   required
                 />
@@ -210,7 +199,7 @@ export function MessagesWall() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-[#3CB371] hover:bg-[#2d5a3d] text-white py-3"
+                className="w-full bg-[#7a5a43] hover:bg-[#c1a892] text-white py-3"
               >
                 {isSubmitting ? (
                   <>
@@ -232,32 +221,32 @@ export function MessagesWall() {
       <div className="space-y-6">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="animate-spin text-[#3CB371]" size={48} />
-            <span className="ml-4 text-[#2d5a3d]">Carregando mensagens...</span>
+            <Loader2 className="animate-spin text-[#7a5a43]" size={48} />
+            <span className="ml-4 text-[#7a5a43]">Carregando mensagens...</span>
           </div>
         ) : messages.length === 0 ? (
-          <Card className="bg-white border-[#3CB371]/30 shadow-lg">
+          <Card className="bg-white border-[#c1a892]/30 shadow-lg">
             <CardContent className="p-8 text-center">
-              <MessageCircle className="mx-auto mb-4 text-[#3CB371]/50" size={48} />
-              <p className="text-[#2d5a3d] text-lg">Seja o primeiro a deixar uma mensagem carinhosa para o Lucca!</p>
+              <MessageCircle className="mx-auto mb-4 text-[#c1a892]" size={48} />
+              <p className="text-[#7a5a43] text-lg">Seja o primeiro a deixar uma mensagem carinhosa para o Lucca!</p>
             </CardContent>
           </Card>
         ) : (
           messages.map((message) => (
-            <Card key={message.id} className="bg-white border-[#3CB371]/30 shadow-lg hover:shadow-xl transition-shadow">
+            <Card key={message.id} className="bg-white border-[#c1a892]/30 shadow-lg hover:shadow-xl transition-shadow">
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
-                  <div className="bg-[#f0f8f0] rounded-full p-3 flex-shrink-0">
-                    <Heart className="text-[#3CB371]" size={20} />
+                  <div className="bg-[#f2ebdd] rounded-full p-3 flex-shrink-0">
+                    <Heart className="text-[#7a5a43]" size={20} />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <h4 className="font-sans text-lg text-[#2d5a3d] font-semibold">
+                      <h4 className="font-sans text-lg text-[#7a5a43] font-semibold">
                         {capitalizeFirstLetter(message.author_name)}
                       </h4>
-                      <span className="text-sm text-[#3CB371]/70">{formatDate(message.created_at)}</span>
+                      <span className="text-sm text-[#c1a892]">{formatDate(message.created_at)}</span>
                     </div>
-                    <p className="text-[#2d5a3d] leading-relaxed whitespace-pre-wrap">{message.message}</p>
+                    <p className="text-[#7a5a43] leading-relaxed whitespace-pre-wrap">{message.message}</p>
                   </div>
                 </div>
               </CardContent>
