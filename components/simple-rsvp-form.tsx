@@ -54,7 +54,9 @@ export function SimpleRsvpForm() {
         <Card className="w-full max-w-4xl mx-auto bg-white/80 backdrop-blur-sm border-[#3CB371]/30 shadow-lg">
           <CardHeader className="text-center">
             <CardTitle className="font-serif text-3xl text-[#3CB371]">Confirme sua Presença</CardTitle>
-            <CardDescription className="text-[#2d5a3d]">É rapidinho, só precisamos do seu nome!</CardDescription>
+            <CardDescription className="text-[#2d5a3d]">
+              Meus papais pedem a gentileza da sua confirmação até o dia 10 de outubro.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
