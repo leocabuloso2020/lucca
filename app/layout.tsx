@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   title: "Chá de Bebê do Lucca",
   description: "Celebre conosco a chegada do nosso pequeno Lucca!",
   generator: "v0.app",
+  icons: {
+    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤎</text></svg>",
+  },
 }
 
 export default function RootLayout({
