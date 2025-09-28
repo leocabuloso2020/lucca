@@ -94,15 +94,20 @@ export function MessagesWall() {
     setSuccessMessage("")
 
     try {
-      const { error } = await supabase.from("messages").insert([
+      const { data, error } = await supabase.from("messages").insert([
         {
           author_name: formData.name.trim(),
           message: formData.message.trim(),
           approved: false,
         },
-      ])
+      ]).select(); // Adicionado .select() para retornar os dados inseridos
 
-      if (error) throw error
+      if (error) {
+        console.error("Supabase Insert Error:", error);
+        throw error;
+      }
+
+      console.log("Supabase Insert Success:", data);
 
       setFormData({ name: "", message: "" })
       setShowForm(false)
@@ -111,6 +116,7 @@ export function MessagesWall() {
       setTimeout(() => setSuccessMessage(""), 5000)
     } catch (error) {
       setError("Erro ao enviar mensagem. Tente novamente.")
+      console.error("Error submitting message:", error);
     } finally {
       setIsSubmitting(false)
     }
