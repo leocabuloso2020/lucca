@@ -15,14 +15,15 @@ const adminLoginSchema = z.object({
   password: z.string().min(6, { message: "A senha deve ter pelo menos 6 caracteres." }),
 })
 
-export type AdminLoginFormInputs = z.infer<typeof adminLoginSchema> // Adicionado 'export'
+export type AdminLoginFormInputs = z.infer<typeof adminLoginSchema>
 
 interface AdminAuthFormProps {
   onLogin: (values: AdminLoginFormInputs) => Promise<void>
+  onPasswordReset: (email: string) => Promise<void>
   isSubmitting: boolean
 }
 
-export function AdminAuthForm({ onLogin, isSubmitting }: AdminAuthFormProps) {
+export function AdminAuthForm({ onLogin, onPasswordReset, isSubmitting }: AdminAuthFormProps) {
   const form = useForm<AdminLoginFormInputs>({
     resolver: zodResolver(adminLoginSchema),
     defaultValues: {
@@ -30,6 +31,11 @@ export function AdminAuthForm({ onLogin, isSubmitting }: AdminAuthFormProps) {
       password: "",
     },
   })
+
+  const handlePasswordResetClick = () => {
+    const email = form.getValues("email")
+    onPasswordReset(email)
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-amber-50 flex items-center justify-center p-4">
@@ -53,7 +59,16 @@ export function AdminAuthForm({ onLogin, isSubmitting }: AdminAuthFormProps) {
               )}
             </div>
             <div>
-              <Label htmlFor="password">Senha</Label>
+              <div className="flex justify-between items-center">
+                <Label htmlFor="password">Senha</Label>
+                <button
+                  type="button"
+                  onClick={handlePasswordResetClick}
+                  className="text-sm text-green-600 hover:underline"
+                >
+                  Esqueci minha senha
+                </button>
+              </div>
               <Input
                 id="password"
                 type="password"

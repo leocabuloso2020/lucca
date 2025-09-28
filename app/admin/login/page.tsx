@@ -68,9 +68,32 @@ export default function AdminLoginPage() {
     setIsSubmittingLogin(false)
   }
 
+  const handlePasswordReset = async (email: string) => {
+    if (!email) {
+      toast.error("Por favor, digite seu e-mail no campo correspondente antes de clicar em 'Esqueci minha senha'.")
+      return
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/admin`, // Redirect back to admin after reset
+    })
+
+    if (error) {
+      toast.error(error.message)
+    } else {
+      toast.success("Se o e-mail estiver correto, um link para redefinir a senha foi enviado.")
+    }
+  }
+
   if (loadingAuth) {
     return <AdminLoadingSpinner />
   }
 
-  return <AdminAuthForm onLogin={handleLogin} isSubmitting={isSubmittingLogin} />
+  return (
+    <AdminAuthForm
+      onLogin={handleLogin}
+      onPasswordReset={handlePasswordReset}
+      isSubmitting={isSubmittingLogin}
+    />
+  )
 }
