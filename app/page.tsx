@@ -96,7 +96,7 @@ export default function BabyShowerPage() {
         <div className="text-center max-w-4xl mx-auto animate-fade-in-up">
           <div className="mb-8">
             <h1 className="text-6xl md:text-8xl font-serif text-[#3CB371] mb-4 animate-heartbeat">
-              {eventSettings.event_title || "Lucca"}
+              {eventSettings.event_title || "Chá de Bebê do Lucca"}
             </h1>
             <div className="flex items-center justify-center gap-4 text-[#DAA520] text-4xl mb-6">
               <Heart className="animate-heartbeat" />
