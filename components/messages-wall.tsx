@@ -100,14 +100,11 @@ export function MessagesWall() {
           message: formData.message.trim(),
           approved: false,
         },
-      ]).select(); // Adicionado .select() para retornar os dados inseridos
+      ]).select();
 
       if (error) {
-        console.error("Supabase Insert Error:", error);
         throw error;
       }
-
-      console.log("Supabase Insert Success:", data);
 
       setFormData({ name: "", message: "" })
       setShowForm(false)
