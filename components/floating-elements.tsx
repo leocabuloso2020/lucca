@@ -8,7 +8,7 @@ export function FloatingElements() {
   )
 
   useEffect(() => {
-    const emojis = ["☁️", "🎈", "👶", "💚", "🍼", "🧸", "⭐", "🌙"]
+    const emojis = ["☁️", "🎈", "👶", "🤎", "🍼", "🧸", "⭐", "🌙"]
     const newElements = Array.from({ length: 12 }, (_, i) => ({
       id: i,
       emoji: emojis[Math.floor(Math.random() * emojis.length)],
