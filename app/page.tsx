@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import { Heart, MapPin, Calendar, Clock, Loader2 } from "lucide-react"
+import { Heart, MapPin, Calendar, Clock, Loader2, Gift } from "lucide-react"
 import { supabase } from "@/lib/supabase/client"
 import { FloatingElements } from "@/components/floating-elements"
 import { MusicPlayer } from "@/components/music-player"
@@ -127,6 +127,35 @@ export default function BabyShowerPage() {
           </div>
 
           <CountdownTimer targetDateTime={eventDateTime} />
+
+          <Card className="mt-8 bg-white/90 backdrop-blur-sm border-[#3CB371]/30 shadow-lg text-left">
+            <CardContent className="p-6">
+              <div className="text-center mb-6">
+                <Gift className="text-[#DAA520] mx-auto mb-2" size={32} />
+                <h3 className="font-serif text-2xl text-[#3CB371]">Sugestão de Presente</h3>
+              </div>
+              <p className="text-center text-[#2d5a3d] mb-4">Sua presença será o nosso maior presente! 💕</p>
+              <p className="text-center text-[#2d5a3d] mb-6">
+                Mas, se desejar nos ajudar a preparar essa nova fase, pedimos com muito carinho:
+              </p>
+              <ul className="space-y-4 text-[#2d5a3d] list-none p-0 max-w-md mx-auto">
+                <li className="flex items-start">
+                  <span className="mr-3 text-xl pt-1">🍼</span>
+                  <div>
+                    <strong className="font-semibold">Fraldas (tamanho P, M ou G)</strong>
+                    <p className="text-sm text-gray-600">✨ Marcas: Huggies, Turma da Mônica ou Pampers</p>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-3 text-xl pt-1">🎁</span>
+                  <strong className="font-semibold">E um Mimo especial da sua escolha</strong>
+                </li>
+              </ul>
+              <p className="text-center text-[#2d5a3d] mt-6">
+                Contamos com seu carinho para tornar esse momento ainda mais doce! 🌸
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
