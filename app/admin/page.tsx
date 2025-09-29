@@ -133,6 +133,7 @@ export default function AdminPage() {
         {} as Record<string, string>,
       )
       setSettings(settingsObj)
+      console.log("Admin: Fetched event settings:", settingsObj); // Log para o admin
     }
 
     setLoadingData(false)
@@ -179,7 +180,8 @@ export default function AdminPage() {
   }
 
   const updateSetting = async (key: string, value: string) => {
-    const { error } = await supabase
+    console.log(`Admin: Attempting to update setting: ${key} with value: ${value}`);
+    const { data, error } = await supabase
       .from("event_settings")
       .upsert(
         { setting_key: key, setting_value: value, updated_at: new Date().toISOString() },
@@ -187,10 +189,12 @@ export default function AdminPage() {
       )
 
     if (!error) {
-      setSettings({ ...settings, [key]: value })
+      console.log(`Admin: Setting '${key}' updated successfully. Supabase response:`, data);
       toast.success("Configuração atualizada com sucesso!")
+      // Recarregar todos os dados do dashboard para garantir que o estado local esteja sincronizado
+      await loadDashboardData();
     } else {
-      console.error("Error updating setting:", error)
+      console.error(`Admin: Error updating setting '${key}':`, error);
       toast.error("Erro ao atualizar configuração.")
     }
   }
