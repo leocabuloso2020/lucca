@@ -103,6 +103,8 @@ export function MessagesWall() {
       ]).select();
 
       if (error) {
+        // Log the full error object for better debugging
+        console.error("Error submitting message to Supabase:", error);
         throw error;
       }
 
@@ -111,9 +113,9 @@ export function MessagesWall() {
       setSuccessMessage("Mensagem enviada! Ela aparecerá no mural após aprovação.")
 
       setTimeout(() => setSuccessMessage(""), 5000)
-    } catch (error) {
-      setError("Erro ao enviar mensagem. Tente novamente.")
-      console.error("Error submitting message:", error);
+    } catch (error: any) { // Use 'any' for now to catch all error types
+      setError(error.message || "Erro ao enviar mensagem. Tente novamente.");
+      console.error("Error submitting message in frontend catch block:", error);
     } finally {
       setIsSubmitting(false)
     }
