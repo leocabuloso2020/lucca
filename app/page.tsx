@@ -37,6 +37,7 @@ export default function BabyShowerPage() {
           {} as Record<string, string>,
         )
         setEventSettings(settingsObj)
+        console.log("Fetched event settings:", settingsObj); // Adicionado para depuração
       }
       setLoading(false)
     }
