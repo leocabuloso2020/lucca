@@ -24,10 +24,11 @@ export default function BabyShowerPage() {
   useEffect(() => {
     const fetchEventSettings = async () => {
       setLoading(true)
+      console.log("Iniciando busca das configurações do evento no Supabase...");
       const { data, error } = await supabase.from("event_settings").select("*")
 
       if (error) {
-        console.error("Error fetching event settings:", error)
+        console.error("Erro ao buscar configurações do evento:", error)
       } else if (data) {
         const settingsObj = data.reduce(
           (acc: Record<string, string>, item: EventSetting) => {
@@ -37,7 +38,8 @@ export default function BabyShowerPage() {
           {} as Record<string, string>,
         )
         setEventSettings(settingsObj)
-        console.log("Fetched event settings:", settingsObj); // Adicionado para depuração
+        console.log("Configurações do evento buscadas (dados brutos):", data);
+        console.log("Configurações do evento processadas (estado):", settingsObj);
       }
       setLoading(false)
     }
@@ -54,7 +56,7 @@ export default function BabyShowerPage() {
         year: "numeric",
       })
     } catch (e) {
-      console.error("Invalid date string for formatting:", dateString, e)
+      console.error("String de data inválida para formatação:", dateString, e)
       return "Data inválida"
     }
   }
@@ -65,10 +67,19 @@ export default function BabyShowerPage() {
     return `${startTime} - ${endTime}`
   }
 
-  const eventDate = eventSettings.event_date || "2025-03-15"
-  const eventTime = eventSettings.event_time || "14:00"
-  const eventEndTime = eventSettings.event_time_end || ""
+  // Usando os valores padrão que definimos no banco de dados, caso as configurações não sejam carregadas
+  const eventDate = eventSettings.event_date || "2025-11-08"
+  const eventTime = eventSettings.event_time || "13:00"
+  const eventEndTime = eventSettings.event_time_end || "18:00"
+  const eventTitle = eventSettings.event_title || "Chá de Bebê do Lucca"
   const eventDateTime = `${eventDate}T${eventTime}:00`
+
+  console.log("Data do evento derivada:", eventDate);
+  console.log("Hora de início do evento derivada:", eventTime);
+  console.log("Hora de término do evento derivada:", eventEndTime);
+  console.log("Título do evento derivado:", eventTitle);
+  console.log("Data e hora completas do evento derivadas:", eventDateTime);
+
 
   if (loading) {
     return (
@@ -88,7 +99,7 @@ export default function BabyShowerPage() {
         <div className="text-center max-w-4xl mx-auto animate-fade-in-up">
           <div className="mb-8">
             <h1 className="text-5xl md:text-6xl font-serif text-[#7a5a43] mb-4 animate-heartbeat">
-              {eventSettings.event_title || "Chá de Bebê do Lucca"}
+              {eventTitle}
             </h1>
             <div className="flex items-center justify-center gap-4 text-[#7a5a43] text-4xl mb-6">
               <Heart className="animate-heartbeat" />
