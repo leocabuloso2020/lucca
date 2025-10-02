@@ -102,18 +102,18 @@ export default function BabyShowerPage() {
           </p>
 
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-[#c1a892]/20 mb-8">
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6 text-[#7a5a43]">
-              <div className="flex items-center gap-2">
-                <Calendar className="text-[#c1a892]" />
-                <span className="font-medium">{formatDate(eventDate)}</span>
+            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-[#7a5a43]">
+              <div className="flex items-center gap-2 min-w-[180px] justify-center md:justify-start">
+                <Calendar className="text-[#c1a892] w-5 h-5" />
+                <span className="font-medium text-lg text-center md:text-left">{formatDate(eventDate)}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Clock className="text-[#c1a892]" />
-                <span className="font-medium">{formatTimeRange(eventTime, eventEndTime)}</span>
+              <div className="flex items-center gap-2 min-w-[120px] justify-center md:justify-start">
+                <Clock className="text-[#c1a892] w-5 h-5" />
+                <span className="font-medium text-lg text-center md:text-left">{formatTimeRange(eventTime, eventEndTime)}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="text-[#c1a892]" />
-                <span className="font-medium">{eventSettings.event_address || "Salão de Festas"}</span>
+              <div className="flex items-center gap-2 min-w-[250px] justify-center md:justify-start">
+                <MapPin className="text-[#c1a892] w-5 h-5" />
+                <span className="font-medium text-lg text-center md:text-left leading-tight">{eventSettings.event_address || "Salão de Festas"}</span>
               </div>
             </div>
           </div>
