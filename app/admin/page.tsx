@@ -25,6 +25,7 @@ export default function AdminPage() {
   const [messages, setMessages] = useState<MessageType[]>([])
   const [confirmations, setConfirmations] = useState<ConfirmationType[]>([])
   const [settings, setSettings] = useState<Record<string, string>>({})
+  const [settingsUpdateKey, setSettingsUpdateKey] = useState(0); // Key to force re-render
 
   useEffect(() => {
     let isMounted = true;
@@ -181,6 +182,8 @@ export default function AdminPage() {
 
   const updateSetting = async (key: string, value: string) => {
     console.log(`Admin: Attempting to update setting: ${key} with value: ${value}`);
+    console.log("Admin: Current settings state BEFORE update:", settings);
+
     const { data, error } = await supabase
       .from("event_settings")
       .upsert(
@@ -191,12 +194,14 @@ export default function AdminPage() {
     if (!error) {
       console.log(`Admin: Setting '${key}' updated successfully. Supabase response:`, data);
       toast.success("Configuração atualizada com sucesso!")
-      // Recarregar todos os dados do dashboard para garantir que o estado local esteja sincronizado
+      // Force re-fetch of all dashboard data to ensure consistency
       await loadDashboardData();
+      setSettingsUpdateKey(prev => prev + 1); // Increment key to force re-render of AdminDashboardLayout
     } else {
       console.error(`Admin: Error updating setting '${key}':`, error);
       toast.error("Erro ao atualizar configuração.")
     }
+    console.log("Admin: Current settings state AFTER update attempt:", settings);
   }
 
   const handleSettingsChange = (key: string, value: string) => {
@@ -237,6 +242,7 @@ export default function AdminPage() {
 
   return (
     <AdminDashboardLayout
+      key={settingsUpdateKey} // Add key to force re-render when settings change
       profile={profile}
       messages={messages}
       confirmations={confirmations}
