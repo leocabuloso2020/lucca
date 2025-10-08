@@ -48,7 +48,10 @@ export function AdminSettingsTab({
                 value={settings.event_date || ""}
                 onChange={(e) => onSettingsChange("event_date", e.target.value)}
               />
-              <Button onClick={() => onUpdateSetting("event_date", settings.event_date)}>Salvar</Button>
+              <Button onClick={() => {
+                console.log("AdminSettingsTab: Valor enviado para 'event_date':", settings.event_date);
+                onUpdateSetting("event_date", settings.event_date);
+              }}>Salvar</Button>
             </div>
           </div>
 
