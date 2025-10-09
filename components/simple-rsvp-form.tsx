@@ -54,7 +54,7 @@ export function SimpleRsvpForm() {
         <div className="w-full max-w-4xl mx-auto text-center">
           <h2 className="text-5xl md:text-6xl font-serif text-[#7a5a43] mb-4">Confirme sua Presença</h2>
           <p className="text-lg text-[#7a5a43] mb-6">
-            Meus papais pedem a gentileza da sua confirmação até o dia 10 de outubro.
+            Meus papais pedem a gentileza da sua confirmação até o dia 24 de outubro.
           </p>
           <Card className="w-full bg-white/80 backdrop-blur-sm border-[#c1a892]/30 shadow-lg">
             <CardContent>
