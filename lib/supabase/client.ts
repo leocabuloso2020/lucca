@@ -6,6 +6,10 @@ const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+// Adicionando logs para depuração
+console.log("Supabase client initialized with URL:", supabaseUrl);
+console.log("Supabase client initialized with anon key (first 10 chars):", supabaseAnonKey.substring(0, 10) + "...");
+
 export type Gift = {
   id: number
   name: string
