@@ -20,6 +20,12 @@ export function MessagesWall() {
   const [error, setError] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
 
+  // Adicionando log para depuração do cliente Supabase
+  useEffect(() => {
+    console.log("MessagesWall: Supabase client instance:", supabase);
+    // Você pode adicionar mais verificações aqui, como supabase.auth.getSession()
+  }, []);
+
   const capitalizeFirstLetter = (str: string) => {
     return str
       .toLowerCase()
